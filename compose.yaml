@@ -1,0 +1,14 @@
+services:
+ mysql:
+  image: mysql:8.0
+  ports:
+   - 0.0.0.0:3306:3306
+  volumes:
+   - bills-mysql-data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: secret
+   MYSQL_DATABASE: bills
+
+volumes:
+ bills-mysql-data:
+
