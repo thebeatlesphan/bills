@@ -22,7 +22,7 @@ _note: Docker will deploy the single container on host-ip:3000:3306_
 I was also able to expose my Raspberry Pi to the internet by port forwarding all requests to my public-ip:3000:3306 to my Raspberry Pi.
 These instructions are specific to your own ISP and router/modem.
 
-### Entity Relationship Diagram ERD) - _subject to be edited as the project progresses_
+### Entity Relationship Diagram ERD - _subject to be edited as the project progresses_
 | user      | expense  | group    | user_group | expense_group |
 |:----------|:---------|:---------|:-----------|:--------------|
 |id pk      |id pk     |id pk     |group.id fk |group.id fk    |
