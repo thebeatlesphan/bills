@@ -10,8 +10,7 @@
 Today, this project was started in earnest and I decided to begin with the database.
 I had wanted to deploy an app on my Raspberry Pi 4 (8GB) for some time now and have finally found an issue solve.
 Working with a 64 Bit ARM processor limited my database options but I was able to circumvent some of these limitations by using Docker.
-I completed the [Docker Getting-Started](https://docs.docker.com/engine/reference/commandline/cli/) to familiarize myself with the platform.
-After much trial and error, I was able to deploy a single container with mysql.
+I completed the [Docker Getting-Started](https://docs.docker.com/engine/reference/commandline/cli/) to familiarize myself with the platform, and after much trial and error, I was able to deploy a single container with mysql.
 
 _<ins>deploying docker</ins>_
 1. cd to project directory
