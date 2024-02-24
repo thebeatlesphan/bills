@@ -25,7 +25,7 @@ These instructions are specific to your own ISP and router/modem.
 | user      | expense  | group    | user_group | expense_group |
 |:----------|:---------|:---------|:-----------|:--------------|
 |id pk      |id pk     |id pk     |group.id fk |group.id fk    |
-|username pk|name      |group_name|user.id fk  |expense.id fk  |
+|username   |name      |group_name|user.id fk  |expense.id fk  |
 |password   |amount    |          |            |               |
 |           |date      |          |            |               |
 
@@ -34,10 +34,14 @@ Created Github Repository.\
 Wrote README.md.\
 Started research on Java Spring Boot.\
 Began setting up my dev environment for remote work: port forwarded ssh and mysql.\
-Updated ERD.\
+Updated ERD.
 
 <ins>Things To Consider For Security</ins>
 1. Edit /etc/ssh/sshd_config -> +AllowGroups +AllowUsers
 2. Port Knocking
 3. grep "Failed Password" /var/log/auth.log
 
+## February 23, 2024
+Added Spring Boot - Spring Web, Spring Data JPA, and MySQL Driver.\
+<ins>Keyterms</ins>
+Entity Model, Repository, Controller, and Application Class
