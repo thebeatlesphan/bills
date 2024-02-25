@@ -1,4 +1,4 @@
-package com.example.bills;
+package com.example.bills.user;
 
 import org.springframework.data.repository.CrudRepository;
 
