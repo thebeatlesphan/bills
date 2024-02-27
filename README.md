@@ -43,5 +43,10 @@ Updated ERD.
 
 ## February 23, 2024
 Added Spring Boot - Spring Web, Spring Data JPA, and MySQL Driver.\
-<ins>Keyterms</ins>
+<ins>Keyterms</ins>\
 Entity Model, Repository, Controller, and Application Class
+
+## February 26, 2024
+Refactored database API and constraints.\
+Replaced all controller.java files with @RepositoryRestResource which creates all CRUD endpoints automatically.
+Continuing research for Frontend development and creating association tables.
