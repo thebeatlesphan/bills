@@ -50,3 +50,6 @@ Entity Model, Repository, Controller, and Application Class
 Refactored database API and constraints.\
 Replaced all controller.java files with @RepositoryRestResource which creates all CRUD endpoints automatically.
 Continuing research for Frontend development and creating association tables.
+
+## February 27, 2024
+Implement NextJS for Frontend client.\

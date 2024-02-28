@@ -15,5 +15,5 @@ public interface ExpenseGroupRepository extends PagingAndSortingRepository<Expen
    
     List<ExpenseGroup> findByClan(@Param("clan") Clan clan);
 
-    List<ExpenseGroup> findByExpense(@Param("expense") Expense expense)
+    List<ExpenseGroup> findByExpense(@Param("expense") Expense expense);
 }
