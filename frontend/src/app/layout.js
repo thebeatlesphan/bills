@@ -1,12 +1,17 @@
+import Navbar from "./components/navbar/Navbar";
+
 export const metadata = {
-  title: 'bills',
-  description: 'Phan Family Expense Tracker',
-}
+  title: "bills",
+  description: "Phan Family Expense Tracker",
+};
 
 export default function RootLayout({ children }) {
- return (
+  return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Navbar />
+        {children}
+      </body>
     </html>
-  )
+  );
 }

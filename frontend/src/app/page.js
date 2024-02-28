@@ -1,10 +1,16 @@
-import React from 'react';
+"use client";
+
+import React from "react";
+import AuthForm from "./components/authform/AuthForm";
 
 const HomePage = () => {
+  const handleLogin = (credentials) => {
+    console.log("credentials: " + JSON.stringify({ credentials }));
+  };
+
   return (
     <div>
-      <h1>Welcome to My Next.js App!</h1>
-      <p>This is a basic example page.</p>
+      <AuthForm />
     </div>
   );
 };
