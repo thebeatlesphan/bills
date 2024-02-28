@@ -1,0 +1,14 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 4em 2em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form input {
+  background-color: rgb(240, 231, 231);
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+}
