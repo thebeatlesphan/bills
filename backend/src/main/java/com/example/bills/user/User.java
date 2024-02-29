@@ -14,6 +14,8 @@ public class User {
     @Column(unique=true)
     private String username;
     private String password;
+    @Column
+    private String hashedPassword;
 
     public Integer getId() {
         return id;
@@ -37,5 +39,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 }

@@ -70,4 +70,18 @@ Created the endpoint for localhost:8080/api/auth/register.\
 <ins>TODO:</ins>\
 Certificate Authority (CA) for HTTPS\
 Hypermedia as the engine of application state HATEOAS\
-Test Harness\
+Test Harness
+
+## February 29, 2024
+Implementing Spring Security for Authentication and Authorization.\
+<ins>Keyterms:</ins>\
+Cross Site Request Forgery (CSRF)\
+Spring Security Principles: Authentication, Authorization, Principal, Authority, and Role\
+Spring Security Flow:
+1. User Enters Credentials
+2. Authentication Filter / Authentication
+3. Authentication Manager
+4. Authentication Provider
+5. User Details Service
+6. Password Encoder
+7. Security Context
