@@ -19,16 +19,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf((csrf) -> csrf.disable()) // Replace CSRF with JWT
-            .authorizeHttpRequests((authorize) -> authorize
-            .requestMatchers("/api/**").permitAll()
-            .anyRequest().authenticated()
-        );
+        http
+            .csrf((csrf) -> csrf.disable()) // Replace CSRF with JWT
+            .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/api/**").permitAll().anyRequest().authenticated());
 
         return http.build();
-    }
+    } 
 
     @Bean
     public AuthenticationManager authenticationManager(
