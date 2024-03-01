@@ -73,11 +73,13 @@ Hypermedia as the engine of application state HATEOAS\
 Test Harness
 
 ## February 29, 2024
+
 Implementing Spring Security for Authentication and Authorization.\
 <ins>Keyterms:</ins>\
-Cross Site Request Forgery (CSRF)\
+Cross Site Request Forgery (CSRF) - Hijacking / Spoofing of HTTP requests\
 Spring Security Principles: Authentication, Authorization, Principal, Authority, and Role\
-Spring Security Flow:
+Threadlocal - Store data that will be accessible only by a specific thread.\
+<ins>Spring Security Flow:</ins>\
 1. User Enters Credentials
 2. Authentication Filter / Authentication
 3. Authentication Manager

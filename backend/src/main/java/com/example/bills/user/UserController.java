@@ -27,7 +27,7 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     ResponseEntity<String> registerUser(@RequestBody User user) {
         // Check if the username already exists
         if (userRepository.findByUsername(user.getUsername()) != null) {
@@ -45,10 +45,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     ResponseEntity<String> loginUser(@RequestBody User user) {
         // Check if the username exists
-        if (userRepository.findByUsername(user.getUsername()) != null) {
+        if (userRepository.findByUsername(user.getUsername()) == null) {
             return ResponseEntity.badRequest().body("Username invalid");
         }
 
