@@ -3,6 +3,8 @@ package com.example.bills.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.bills.user.User;
+
 import java.util.Collection;
 
 public class UserPrincipal implements UserDetails {
@@ -19,6 +21,19 @@ public class UserPrincipal implements UserDetails {
         this.password = password;
         this.authorities = authorities;
     }
+
+    public UserPrincipal(Integer id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
+    public static UserPrincipal create(User user) {
+        return new UserPrincipal(
+                user.getId(),
+                user.getUsername(),
+                user.getPassword());
+    };
 
     // Getter methods for id, username, password, authorities
     public Integer getId() {

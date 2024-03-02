@@ -5,36 +5,41 @@ import Button from "../button/Button";
 import styles from "./AuthForm.module.css";
 
 const AuthForm = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLoginForm, setIsLoginForm] = useState(true);
   const [registrationStatus, setRegistrationStatus] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleForm = () => {
-    setIsLogin(!isLogin);
+    setIsLoginForm(!isLoginForm);
   };
 
   const handleRegistrationStatus = (status) => {
     setRegistrationStatus(status);
   };
 
+  const handleIsLoggedIn = (status) => {
+    setIsLoggedIn(status);
+  };
+
   useEffect(() => {
     // If registration is successful, automatically switch to login form
     if (registrationStatus == "success") {
-      setIsLogin(true);
+      setIsLoginForm(true);
     }
   }, [registrationStatus]);
 
   return (
     <div className={styles.authform}>
-      {isLogin ? (
-        <Login />
+      {isLoginForm ? (
+        <Login onLogin={handleIsLoggedIn} />
       ) : (
         <Register onRegistrationStatus={handleRegistrationStatus} />
       )}
       <p className={styles.p}>
-        {isLogin ? "Not a member?" : "Already a member?"}
+        {isLoginForm ? "Not a member?" : "Already a member?"}
         <Button
           className={styles.button}
-          label={isLogin ? "Register" : "Login"}
+          label={isLoginForm ? "Register" : "Login"}
           onClick={toggleForm}
         />
       </p>
