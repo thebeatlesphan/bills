@@ -43,7 +43,7 @@ public class UserController {
             
             // Hash the password using bcrypt
             String hashedPassword = passwordEncoder.encode(user.getPassword());
-            user.setHashedPassword(hashedPassword);
+            user.setPassword(hashedPassword);
             
             // If username doesn't exists, register the user
             userRepository.save(user);

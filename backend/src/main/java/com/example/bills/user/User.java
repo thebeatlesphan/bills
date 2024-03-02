@@ -1,8 +1,5 @@
 package com.example.bills.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,9 +15,9 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
     @Transient
-    private String password;
+    private String plain_password;
     @Column(nullable = false)
-    private String hashedPassword;
+    private String password;
 
     public Integer getId() {
         return id;
@@ -38,19 +35,19 @@ public class User {
         this.username = username;
     }
 
+    public String getPlainPassword() {
+        return plain_password;
+    }
+
+    public void setPlainPassword(String password) {
+        this.plain_password = password;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
     }
 }

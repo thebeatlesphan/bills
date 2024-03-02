@@ -5,7 +5,6 @@ import styles from "./Register.module.css";
 const Register = ({ onRegistrationStatus }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [registered, setRegistered] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -35,12 +34,9 @@ const Register = ({ onRegistrationStatus }) => {
         onRegistrationStatus("success");
       }
     } catch (error) {
-      console.error("Error during registration: ", error);
       onRegistrationStatus("failure");
     }
   };
-
-  const test = true;
 
   return (
     <form className={styles.form} onSubmit={handleRegister} name="register">

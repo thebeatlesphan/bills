@@ -78,10 +78,12 @@ Test Harness
 ## February 29, 2024
 
 Implementing Spring Security for Authentication and Authorization.\
+
 <ins>Keyterms:</ins>\
 Cross Site Request Forgery (CSRF) - Hijacking / Spoofing of HTTP requests\
 Spring Security Principles: Authentication, Authorization, Principal, Authority, and Role\
 Threadlocal - Store data that will be accessible only by a specific thread.\
+
 <ins>Spring Security Flow:</ins>
 1. User Enters Credentials
 2. Authentication Filter / Authentication
@@ -90,3 +92,15 @@ Threadlocal - Store data that will be accessible only by a specific thread.\
 5. User Details Service
 6. Password Encoder
 7. Security Context
+
+## March 2nd, 2024
+TODAY WAS A GREAT DAY!\
+I've been diligently studying the Spring Security architecture and documentation. Issues and problems with implementation has been handled by working ChatGPT, exception handling, and trial and error.\
+
+<ins>Current Dependencies</ins>
+1. Java Persistence API - JPA
+2. Spring Web
+3. MySQL Driver
+4. Rest Repositories
+5. Spring Security
+6. JWT
