@@ -1,20 +1,25 @@
 package com.example.bills.user;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique=true)
+    @Column(unique = true, nullable = false)
     private String username;
+    @Transient
     private String password;
-    @Column
+    @Column(nullable = false)
     private String hashedPassword;
 
     public Integer getId() {

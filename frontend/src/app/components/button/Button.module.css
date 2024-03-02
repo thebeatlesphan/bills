@@ -10,3 +10,8 @@
 .button:hover {
   background-color: #e68b23;
 }
+
+.button:disabled {
+  background-color: grey;
+  cursor: default;
+}
