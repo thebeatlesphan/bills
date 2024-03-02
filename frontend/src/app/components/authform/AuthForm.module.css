@@ -22,3 +22,21 @@
 .button:hover {
   background-color: unset;
 }
+
+.registrationStatus {
+  text-align: center;
+  font-size: 1.2em;
+  animation: bulge 1s;
+}
+
+@keyframes bulge {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

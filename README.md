@@ -1,4 +1,7 @@
 # bills
+### To Start Project
+1. From ./bills/backend `mvnw spring-boot:run`
+2. From ./bills/frontend `npm run dev`
 
 - Author: Andy Phan
 - Name: Phan Family Expense Tracker
@@ -79,7 +82,7 @@ Implementing Spring Security for Authentication and Authorization.\
 Cross Site Request Forgery (CSRF) - Hijacking / Spoofing of HTTP requests\
 Spring Security Principles: Authentication, Authorization, Principal, Authority, and Role\
 Threadlocal - Store data that will be accessible only by a specific thread.\
-<ins>Spring Security Flow:</ins>\
+<ins>Spring Security Flow:</ins>
 1. User Enters Credentials
 2. Authentication Filter / Authentication
 3. Authentication Manager
