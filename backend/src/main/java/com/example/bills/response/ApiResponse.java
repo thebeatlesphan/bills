@@ -1,13 +1,13 @@
-package com.example.bills.exception;
+package com.example.bills.response;
 
 import java.util.Date;
 
-public class ApiResponse {
+public class ApiResponse<T> {
     private String message;
-    private Object data;
+    private T data;
     private Date timestamp;
     
-    public ApiResponse(String message, Object data, Date timestamp) {
+    public ApiResponse(String message, T data, Date timestamp) {
         this.message = message;
         this.data = data;
         this.timestamp = timestamp;
@@ -25,7 +25,7 @@ public class ApiResponse {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 

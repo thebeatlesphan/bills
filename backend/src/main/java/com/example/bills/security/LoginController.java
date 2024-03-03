@@ -1,7 +1,9 @@
 package com.example.bills.security;
 
-import com.example.bills.exception.ApiResponse;
 import com.example.bills.jwt.JwtTokenProvider;
+import com.example.bills.response.ApiResponse;
+import com.example.bills.response.LoginResponse;
+import com.example.bills.user.User;
 
 import java.util.Date;
 
@@ -26,7 +28,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest LoginRequest) {
+    public ResponseEntity<ApiResponse<User>> login(@RequestBody LoginRequest LoginRequest) {
         try {
             // Create an empty SecurityContext
             SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -45,7 +47,15 @@ public class LoginController {
             // Generate JWT token
             String token = jwtTokenProvider.generateToken(authenticationResponse);
 
-            return ResponseEntity.ok().body(new ApiResponse("Successfully logged in", token, new Date()));
+            // Create a LoginResponse object with username and token
+            LoginResponse loginResponse = new LoginResponse(
+                    "Login successful",
+                    null,
+                    new Date(),
+                    LoginRequest.username(),
+                    token);
+
+            return ResponseEntity.ok(loginResponse);
         } catch (Exception ex) {
             return ResponseEntity.status(500).body(new ApiResponse(ex.getMessage(), null, new Date()));
         }

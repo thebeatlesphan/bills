@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.bills.exception.ApiResponse;
 import com.example.bills.exception.UsernameAlreadyExistsException;
+import com.example.bills.response.ApiResponse;
 
 @RestController
 @RequestMapping("/api/auth")
