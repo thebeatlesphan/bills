@@ -1,5 +1,3 @@
-import Navbar from "./components/navbar/Navbar";
-
 export const metadata = {
   title: "bills",
   description: "Phan Family Expense Tracker",
@@ -8,8 +6,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Navbar />
+      <body style={{ margin: 0, padding: 0, overflowX: `hidden` }}>
         {children}
       </body>
     </html>

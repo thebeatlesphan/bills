@@ -7,7 +7,6 @@ import styles from "./AuthForm.module.css";
 const AuthForm = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [registrationStatus, setRegistrationStatus] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleForm = () => {
     setIsLoginForm(!isLoginForm);
@@ -15,10 +14,6 @@ const AuthForm = () => {
 
   const handleRegistrationStatus = (status) => {
     setRegistrationStatus(status);
-  };
-
-  const handleIsLoggedIn = (status) => {
-    setIsLoggedIn(status);
   };
 
   useEffect(() => {
@@ -31,7 +26,7 @@ const AuthForm = () => {
   return (
     <div className={styles.authform}>
       {isLoginForm ? (
-        <Login onLogin={handleIsLoggedIn} />
+        <Login />
       ) : (
         <Register onRegistrationStatus={handleRegistrationStatus} />
       )}

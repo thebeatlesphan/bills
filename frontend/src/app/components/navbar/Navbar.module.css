@@ -1,14 +1,34 @@
 .navbar {
-  position: sticky;
-  top: 0px;
-  left: 0px;
-  width: 100%;
+  font-size: 1.5em;
+  padding: 0 1em;
 }
 
 .unordered {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  gap: 1em;
   list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  padding-inline-start: 0;
+}
+
+.unordered li {
+  cursor: pointer;
+}
+
+.username {
+  font-weight: bolder;
+  align-self: flex-end;
+}
+
+.signOut {
+  cursor: pointer;
+  font-weight: bold;
+  text-align: end;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease; /* Set your preferred transition duration and timing function */
+}
+
+.visible {
+  max-height: 4em; /* Set the maximum height you want */
 }

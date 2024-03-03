@@ -1,11 +1,17 @@
 import { useState } from "react";
+import { useAuth } from "../context/Context";
 
 import Button from "../button/Button";
 import styles from "./Login.module.css";
 
-const Login = ({ onLogin }) => {
+const Login = () => {
+  const { login, isAuthenticated } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const onLogin = (userData) => {
+    login(userData);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,10 +34,17 @@ const Login = ({ onLogin }) => {
 
       if (!response.ok) {
         const error = await response.json();
-        console.log(error.message)
+        console.log(error.message);
       } else {
+        // Save JWT to Session Storage after authenticating
         const reply = await response.json();
-        console.log(reply.data);
+        const tokenx = reply.data;
+        sessionStorage.setItem("jwtToken", tokenx);
+
+        // Call onLogin
+        onLogin(reply);
+
+        console.log(isAuthenticated);
       }
     } catch (error) {
       console.error("Error during login: ", error);
@@ -40,6 +53,7 @@ const Login = ({ onLogin }) => {
 
   return (
     <form className={styles.form} onSubmit={handleLogin}>
+      <p className={styles.p}>Sign In</p>
       <input
         type="text"
         placeholder="username"

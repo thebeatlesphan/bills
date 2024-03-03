@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
-import AuthForm from "./components/authform/AuthForm";
+import { AuthProvider, useAuth } from "./components/context/Context";
+import Home from "./Home";
 
 const HomePage = () => {
   return (
-    <div>
-      <AuthForm />
-    </div>
+    <AuthProvider>
+      <Home />
+    </AuthProvider>
   );
 };
 
