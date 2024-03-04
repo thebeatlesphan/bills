@@ -1,0 +1,37 @@
+.form {
+  position: relative;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  border: solid black 0.1em;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  margin: 0.5em;
+  max-width: 50em;
+}
+
+.title {
+  align-self: center;
+  font-size: 1.2em;
+}
+
+.expand {
+  cursor: pointer;
+  background-color: white;
+  border: solid black 0.1em;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  margin: 0.5em;
+  max-width: 50em;
+  text-align: center;
+}
+
+.collapse {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0.5em;
+  cursor: pointer;
+  font-size: 1.2em;
+}

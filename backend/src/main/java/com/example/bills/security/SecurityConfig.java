@@ -11,22 +11,27 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 import com.example.bills.user.CustomUserDetailsService;
 import com.example.bills.user.UserRepository;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf((csrf) -> csrf.disable()) // Replace CSRF with JWT
-            .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/**").permitAll().anyRequest().authenticated());
+                .csrf((csrf) -> csrf.disable()) // Replace CSRF with JWT
+                .securityContext(securityContext -> securityContext.requireExplicitSave(true))
+                .addFilterBefore(new SecurityContextPersistenceFilter(), BasicAuthenticationFilter.class)
+                .authorizeHttpRequests(
+                        (authorize) -> authorize.requestMatchers("/**").permitAll().anyRequest().authenticated());
 
         return http.build();
-    } 
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -38,8 +43,8 @@ public class SecurityConfig{
 
         return new ProviderManager(authenticationProvider);
     }
-    
-    @Bean 
+
+    @Bean
     UserDetailsService userDetailsService(UserRepository userRepository) {
         return new CustomUserDetailsService(userRepository);
     }

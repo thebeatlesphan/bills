@@ -1,0 +1,11 @@
+.input{
+  display: flex;
+}
+
+.input  label {
+  width: 7em;
+}
+
+.input input {
+  flex-grow: 1;
+}

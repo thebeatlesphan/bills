@@ -1,14 +1,17 @@
 .navbar {
-  font-size: 1.5em;
+  background-color: white;
+  font-size: 1.4em;
   padding: 0 1em;
+  padding-top: 0.3em;
 }
 
 .unordered {
   list-style: none;
   display: flex;
   justify-content: space-between;
-  gap: 1em;
   padding-inline-start: 0;
+  margin-block: 0;
+  margin-inline: 0;
 }
 
 .unordered li {
@@ -21,11 +24,13 @@
 }
 
 .signOut {
-  cursor: pointer;
-  font-weight: bold;
-  text-align: end;
-  max-height: 0;
+  background-color: white;
   overflow: hidden;
+  cursor: pointer;
+  text-align: end;
+  font-weight: bold;
+  max-height: 0;
+  padding-bottom: 0.14em;
   transition: max-height 0.5s ease; /* Set your preferred transition duration and timing function */
 }
 
