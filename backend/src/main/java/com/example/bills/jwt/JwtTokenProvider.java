@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.example.bills.security.UserPrincipal;
+import com.example.bills.user.UserPrincipal;
 
 @Component
 public class JwtTokenProvider {

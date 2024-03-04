@@ -43,8 +43,6 @@ const Login = () => {
 
         // Call onLogin
         onLogin(reply);
-
-        console.log(isAuthenticated);
       }
     } catch (error) {
       console.error("Error during login: ", error);

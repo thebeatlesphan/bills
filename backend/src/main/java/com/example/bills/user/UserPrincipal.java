@@ -1,9 +1,7 @@
-package com.example.bills.security;
+package com.example.bills.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.example.bills.user.User;
 
 import java.util.Collection;
 

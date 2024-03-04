@@ -19,7 +19,6 @@ const Register = ({ onRegistrationStatus }) => {
 
       const response = await fetch(url, {
         method: "POST",
-        mode: "cors",
         headers: {
           "Content-type": "application/json",
         },

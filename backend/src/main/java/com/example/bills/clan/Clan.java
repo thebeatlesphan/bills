@@ -11,8 +11,10 @@ public class Clan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @Column(unique=true)
+    @Column(nullable = false)
     private String clanName;
+    @Column(nullable = false)
+    private String owner;
 
     public Integer getId() {
         return id;
@@ -28,5 +30,13 @@ public class Clan {
 
     public void setClanName(String clanName) {
         this.clanName = clanName;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

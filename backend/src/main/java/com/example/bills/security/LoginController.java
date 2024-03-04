@@ -57,7 +57,7 @@ public class LoginController {
 
             return ResponseEntity.ok(loginResponse);
         } catch (Exception ex) {
-            return ResponseEntity.status(500).body(new ApiResponse(ex.getMessage(), null, new Date()));
+            return ResponseEntity.status(500).body(new ApiResponse<>(ex.getMessage(), null, new Date()));
         }
     }
 
