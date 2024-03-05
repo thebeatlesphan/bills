@@ -47,6 +47,8 @@ public class LoginController {
             // Generate JWT token
             String token = jwtTokenProvider.generateToken(authenticationResponse);
 
+            System.out.println("\n\n" + token + "\n\n");
+
             // Create a LoginResponse object with username and token
             LoginResponse loginResponse = new LoginResponse(
                     "Login successful",

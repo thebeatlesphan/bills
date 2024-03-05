@@ -16,13 +16,34 @@ const Home = () => {
     date: "",
   });
 
-  const handleClanChange = (e) => {
-    setClanForm(e.target.value);
-  };
+  // const handleClanChange = (e) => {
+  //   setClanForm(e.target.value);
+  // };
 
-  const handleClanSubmit = () => {
-    console.log("SUBMIT!");
-    console.log(clanForm);
+  const handleClanSubmit = async (e) => {
+    e.preventDefault();
+
+    const url = "http://10.0.0.239:8080/api/clan/add";
+    const token = sessionStorage.getItem("jwtToken");
+    const data = {
+      clanName: clanForm,
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      window.alert("Failed to add clan. Please try again.");
+      setClanForm("");
+    } else {
+      setClanForm("");
+    }
   };
 
   const handleExpenseChange = (fieldName, value) => {
@@ -37,6 +58,26 @@ const Home = () => {
     console.log(expenseForm);
   };
 
+  const test = async () => {
+    const url = "http://10.0.0.239:8080/api/clan/test";
+    const token = sessionStorage.getItem("jwtToken");
+    const data = {
+      test: "test",
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const reply = await response.json();
+    console.log(reply);
+  };
+
   return (
     <div className={styles.home}>
       {isAuthenticated ? (
@@ -47,7 +88,7 @@ const Home = () => {
             <InputField
               type="text"
               label="Clan Name"
-              onChange={handleClanChange}
+              // onChange={handleClanChange}
             />
             <Button
               type="submit"
@@ -84,6 +125,7 @@ const Home = () => {
               }
             />
           </Form>
+          <Button label="test" onClick={test} />
         </>
       ) : (
         <AuthForm />

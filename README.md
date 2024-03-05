@@ -104,3 +104,5 @@ I've been diligently studying the Spring Security architecture and documentation
 4. Rest Repositories
 5. Spring Security
 6. JWT
+
+## March 3rd, 2024

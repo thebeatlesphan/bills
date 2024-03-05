@@ -38,8 +38,8 @@ const Login = () => {
       } else {
         // Save JWT to Session Storage after authenticating
         const reply = await response.json();
-        const tokenx = reply.data;
-        sessionStorage.setItem("jwtToken", tokenx);
+        const token = reply.token;
+        sessionStorage.setItem("jwtToken", token);
 
         // Call onLogin
         onLogin(reply);

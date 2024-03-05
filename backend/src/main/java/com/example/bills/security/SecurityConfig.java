@@ -25,7 +25,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf((csrf) -> csrf.disable()) // Replace CSRF with JWT
-                .securityContext(securityContext -> securityContext.requireExplicitSave(true))
                 .addFilterBefore(new SecurityContextPersistenceFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         (authorize) -> authorize.requestMatchers("/**").permitAll().anyRequest().authenticated());

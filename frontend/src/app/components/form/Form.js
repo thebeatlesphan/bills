@@ -4,14 +4,6 @@ import styles from "./Form.module.css";
 const Form = ({ onSubmit, title, children, ...props }) => {
   const [expand, setExpand] = useState(true);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (onSubmit) {
-      onSubmit();
-    }
-  };
-
   const handleExpand = () => {
     setExpand((prev) => !prev);
   };
@@ -23,7 +15,7 @@ const Form = ({ onSubmit, title, children, ...props }) => {
           {`Add ${title}`}
         </div>
       ) : (
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.collapse} onClick={handleExpand}>
             X
           </div>

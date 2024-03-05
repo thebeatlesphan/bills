@@ -14,7 +14,7 @@ public class Clan {
     @Column(nullable = false)
     private String clanName;
     @Column(nullable = false)
-    private String owner;
+    private Integer ownerId;
 
     public Integer getId() {
         return id;
@@ -32,11 +32,11 @@ public class Clan {
         this.clanName = clanName;
     }
 
-    public String getOwner() {
-        return owner;
+    public Integer getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
     }
 }
