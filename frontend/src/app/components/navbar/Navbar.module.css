@@ -1,8 +1,12 @@
 .navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 100vw;
   background-color: white;
   font-size: 1.4em;
-  padding: 0 1em;
-  padding-top: 0.3em;
+  padding: 0;
 }
 
 .unordered {
@@ -11,7 +15,8 @@
   justify-content: space-between;
   padding-inline-start: 0;
   margin-block: 0;
-  margin-inline: 0;
+  margin-inline: 2em;
+
 }
 
 .unordered li {
@@ -25,15 +30,13 @@
 
 .signOut {
   background-color: white;
+  padding: 0.5em 0;
   overflow: hidden;
   cursor: pointer;
   text-align: end;
   font-weight: bold;
-  max-height: 0;
-  padding-bottom: 0.14em;
-  transition: max-height 0.5s ease; /* Set your preferred transition duration and timing function */
 }
 
-.visible {
-  max-height: 4em; /* Set the maximum height you want */
+.hidden {
+  display: none;
 }

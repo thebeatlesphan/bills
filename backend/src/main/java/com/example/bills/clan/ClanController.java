@@ -29,11 +29,11 @@ public class ClanController {
     ResponseEntity<ApiResponse<Clan>> registerGroup(@RequestHeader("Authorization") String bearerToken,
             @RequestBody Clan clan) {
 
-        // Verify the JWT token and extract the username
+        // Verify the JWT token and extract the userId
         String jwtToken = bearerToken.substring(7);
         String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
 
-        // Add logic
+        // Clan add logic
         Clan newClan = clan;
         newClan.setOwnerId(Integer.parseInt(userId));
         clanRepository.save(newClan);

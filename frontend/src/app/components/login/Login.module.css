@@ -16,4 +16,5 @@
 .p {
   align-self: center;
   font-size: 2em;
+  user-select: none;
 }

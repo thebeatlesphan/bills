@@ -5,6 +5,8 @@ const initialState = {
   username: null,
   isAuthenticated: false,
   token: null,
+  currentClan: null,
+  clans: null,
 };
 
 // Create the context
@@ -19,6 +21,7 @@ const authReducer = (state, action) => {
         username: action.payload.username,
         isAuthenticated: true,
         token: action.payload.token,
+        clans: action.payload.clans,
       };
     case "LOGOUT":
       return {
@@ -26,6 +29,13 @@ const authReducer = (state, action) => {
         username: null,
         isAuthenticated: false,
         token: null,
+        currentClan: null,
+        clans: null,
+      };
+    case "SELECTCLAN":
+      return {
+        ...state,
+        currentClan: action.payload.clanName,
       };
     default:
       return state;
@@ -36,16 +46,24 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = ({ username, token }) => {
-    dispatch({ type: "LOGIN", payload: { username, token } });
+  const login = ({ username, isAuthenticated, token, clans }) => {
+    dispatch({
+      type: "LOGIN",
+      payload: { username, isAuthenticated, token, clans },
+    });
   };
 
   const logout = () => {
     dispatch({ type: "LOGOUT" });
   };
 
+  const selectClan = (clanName) => {
+    console.log(clanName);
+    dispatch({ type: "SELECTCLAN", payload: { clanName } });
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, login, logout }}>
+    <AuthContext.Provider value={{ ...state, login, logout, selectClan }}>
       {children}
     </AuthContext.Provider>
   );

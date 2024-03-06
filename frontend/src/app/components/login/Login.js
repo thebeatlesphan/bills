@@ -5,7 +5,7 @@ import Button from "../button/Button";
 import styles from "./Login.module.css";
 
 const Login = () => {
-  const { login, isAuthenticated } = useAuth();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

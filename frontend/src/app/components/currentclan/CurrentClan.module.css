@@ -1,0 +1,29 @@
+.dropdown {
+  background-color: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: solid black 0.1px;
+}
+
+.current {
+  text-align: center;
+  padding: 1em;
+  font-size: 1.5em;
+  font-weight: bold;
+  
+}
+
+.dropdown div li {
+  list-style: none;
+  text-align: center;
+}
+
+.clans:hover {
+  cursor: pointer;
+  background-color: beige;
+}
+
+.hidden {
+  display: none;
+}
