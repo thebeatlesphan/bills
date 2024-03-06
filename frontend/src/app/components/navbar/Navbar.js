@@ -10,6 +10,8 @@ function Navbar() {
     setMenu((prev) => !prev);
   };
 
+  const hidden = menu ? "" : styles.hidden;
+
   return (
     <nav className={styles.navbar}>
       <ul className={styles.unordered}>
@@ -19,12 +21,9 @@ function Navbar() {
           {username}
         </li>
       </ul>
-      <p
-        className={`${styles.signOut} ${menu && styles.visible}`}
-        onClick={logout}
-      >
-        sign out
-      </p>
+      <div className={`${styles.signOut} ${hidden}`} onClick={logout}>
+        Sign Out
+      </div>
     </nav>
   );
 }
