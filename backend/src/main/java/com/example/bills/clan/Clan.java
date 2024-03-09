@@ -8,35 +8,37 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Clan {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    @Column(nullable = false)
-    private String clanName;
-    @Column(nullable = false)
-    private Integer ownerId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
 
-    public Integer getId() {
-        return id;
-    }
+  @Column(nullable = false)
+  private String clanName;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  @Column(nullable = false)
+  private Integer ownerId;
 
-    public String getClanName() {
-        return clanName;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public void setClanName(String clanName) {
-        this.clanName = clanName;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public Integer getOwnerId() {
-        return ownerId;
-    }
+  public String getClanName() {
+    return clanName;
+  }
 
-    public void setOwnerId(Integer ownerId) {
-        this.ownerId = ownerId;
-    }
+  public void setClanName(String clanName) {
+    this.clanName = clanName;
+  }
+
+  public Integer getOwnerId() {
+    return ownerId;
+  }
+
+  public void setOwnerId(Integer ownerId) {
+    this.ownerId = ownerId;
+  }
 }

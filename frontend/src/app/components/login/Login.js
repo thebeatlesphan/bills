@@ -18,7 +18,7 @@ const Login = () => {
 
     try {
       // Make a POST request to the backend login endpoint
-      const url = "http://10.0.0.239:8080/login";
+      const url = `${process.env.NEXT_PUBLIC_API}login`;
       const data = {
         username: username,
         password: password,
@@ -39,6 +39,7 @@ const Login = () => {
         // Save JWT to Session Storage after authenticating
         const reply = await response.json();
         const token = reply.token;
+        console.log(reply);
         sessionStorage.setItem("jwtToken", token);
 
         // Call onLogin

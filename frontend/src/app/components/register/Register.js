@@ -11,7 +11,7 @@ const Register = ({ onRegistrationStatus }) => {
 
     try {
       // Make a POST request to the backend registration endpoint
-      const url = "http://10.0.0.239:8080/api/auth/register";
+      const url = `${process.env.NEXT_PUBLIC_API}api/auth/register`;
       const data = {
         username: username,
         password: password,

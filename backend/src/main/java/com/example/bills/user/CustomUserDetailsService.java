@@ -8,21 +8,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private final UserRepository userRepository;
+  @Autowired
+  private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+  public CustomUserDetailsService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username)
+    throws UsernameNotFoundException {
+    User user = userRepository.findByUsername(username);
+
+    if (user == null) {
+      throw new UsernameNotFoundException(("User not found with username: " + username));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException(("User not found with username: " + username));
-        }
-
-        return UserPrincipal.create(user);
-    }
+    return UserPrincipal.create(user);
+  }
 }

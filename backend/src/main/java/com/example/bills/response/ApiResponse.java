@@ -3,38 +3,37 @@ package com.example.bills.response;
 import java.util.Date;
 
 public class ApiResponse<T> {
-    private String message;
-    private T data;
-    private Date timestamp;
-    
-    public ApiResponse(String message, T data, Date timestamp) {
-        this.message = message;
-        this.data = data;
-        this.timestamp = timestamp;
-    }
+  private String message;
+  private T data;
+  private Date timestamp;
 
-    public String getMessage() {
-        return message;
-    }
+  public ApiResponse(String message, T data, Date timestamp) {
+    this.message = message;
+    this.data = data;
+    this.timestamp = timestamp;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public Object getData() {
-        return data;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    public void setData(T data) {
-        this.data = data;
-    }
+  public Object getData() {
+    return data;
+  }
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
+  public void setData(T data) {
+    this.data = data;
+  }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
+  public Date getTimestamp() {
+    return timestamp;
+  }
 
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
 }
