@@ -9,12 +9,12 @@ import Button from "./components/button/Button";
 import CurrentClan from "./components/currentclan/CurrentClan";
 
 const Home = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, currentClan } = useAuth();
   const [clanForm, setClanForm] = useState("");
   const [expenseForm, setExpenseForm] = useState({
     expense: "",
     amount: "",
-    date: "",
+    expenseDate: "",
   });
 
   const handleClanChange = (e) => {
@@ -24,7 +24,7 @@ const Home = () => {
   const handleClanSubmit = async (e) => {
     e.preventDefault();
 
-    const url = "http://10.0.0.239:8080/api/clan/add";
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/add`;
     const token = sessionStorage.getItem("jwtToken");
     const data = {
       clanName: clanForm,
@@ -54,23 +54,20 @@ const Home = () => {
     });
   };
 
-  const handleExpenseSubmit = () => {
-    console.log("SUBMIT");
-    console.log(expenseForm);
-  };
+  const handleExpenseSubmit = async (e) => {
+    e.preventDefault();
 
-  const test = async () => {
-    const url = "http://10.0.0.239:8080/api/clan/test";
+    const url = `${process.env.NEXT_PUBLIC_API}api/expense/add`;
     const token = sessionStorage.getItem("jwtToken");
-    const data = {
-      test: "test",
-    };
+    const data = { ...expenseForm, clanName: currentClan };
+
+    console.log(data);
 
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
-        Authorization: `${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
@@ -100,35 +97,43 @@ const Home = () => {
                 disabled={clanForm == "" ? true : false}
               />
             </Form>
-            <Form title="Expense" onSubmit={handleExpenseSubmit}>
-              <InputField
-                type="text"
-                label="Expense"
-                onChange={(e) => handleExpenseChange("expense", e.target.value)}
-              ></InputField>
-              <InputField
-                type="text"
-                label="Amount"
-                onChange={(e) => handleExpenseChange("amount", e.target.value)}
-              ></InputField>
-              <InputField
-                type="text"
-                label="Date"
-                onChange={(e) => handleExpenseChange("date", e.target.value)}
-                placeholder="YYYY-MM-DD"
-              ></InputField>
-              <Button
-                type="submit"
-                label="Add Expense"
-                disabled={
-                  expenseForm.amount == "" ||
-                  expenseForm.expense == "" ||
-                  expenseForm.date == ""
-                    ? true
-                    : false
-                }
-              />
-            </Form>
+            {currentClan == null ? (
+              <></>
+            ) : (
+              <Form title="Expense" onSubmit={handleExpenseSubmit}>
+                <InputField
+                  type="text"
+                  label="Expense"
+                  onChange={(e) =>
+                    handleExpenseChange("expense", e.target.value)
+                  }
+                ></InputField>
+                <InputField
+                  type="text"
+                  label="Amount"
+                  onChange={(e) =>
+                    handleExpenseChange("amount", e.target.value)
+                  }
+                ></InputField>
+                <InputField
+                  type="date"
+                  label="Date"
+                  onChange={(e) => handleExpenseChange("expenseDate", e.target.value)}
+                ></InputField>
+
+                <Button
+                  type="submit"
+                  label="Add Expense"
+                  disabled={
+                    expenseForm.amount == "" ||
+                    expenseForm.expense == "" ||
+                    expenseForm.expenseDate == ""
+                      ? true
+                      : false
+                  }
+                />
+              </Form>
+            )}
           </div>
         </>
       ) : (

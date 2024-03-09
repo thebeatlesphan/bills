@@ -9,45 +9,48 @@ import jakarta.persistence.Transient;
 
 @Entity
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(unique = true, nullable = false)
-    private String username;
-    @Transient
-    private String plain_password;
-    @Column(nullable = false)
-    private String password;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    public Integer getId() {
-        return id;
-    }
+  @Column(unique = true, nullable = false)
+  private String username;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  @Transient
+  private String plain_password;
 
-    public String getUsername() {
-        return username;
-    }
+  @Column(nullable = false)
+  private String password;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getPlainPassword() {
-        return plain_password;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setPlainPassword(String password) {
-        this.plain_password = password;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public String getPlainPassword() {
+    return plain_password;
+  }
+
+  public void setPlainPassword(String password) {
+    this.plain_password = password;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
 }

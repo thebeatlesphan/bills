@@ -1,51 +1,60 @@
 package com.example.bills.expense;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 public class Expense {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    private String name;
-    private BigDecimal amount;
-    private LocalDate expenseDate;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
 
-    public Integer getId() {
-        return id;
-    }
+  private String name;
+  private BigDecimal amount;
+  private LocalDate expenseDate;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public Expense() {
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Expense(String name, BigDecimal amount, LocalDate expenseDate) {
+    this.name = name;
+    this.amount = amount;
+    this.expenseDate = expenseDate;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public LocalDate getExpenseDate() {
-        return expenseDate;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setExpenseDate(LocalDate expenseDate) {
-        this.expenseDate = expenseDate;
-    }
+  public BigDecimal getAmount() {
+    return amount;
+  }
+
+  public void setAmount(BigDecimal amount) {
+    this.amount = amount;
+  }
+
+  public LocalDate getExpenseDate() {
+    return expenseDate;
+  }
+
+  public void setExpenseDate(LocalDate expenseDate) {
+    this.expenseDate = expenseDate;
+  }
 }

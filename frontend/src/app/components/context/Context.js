@@ -2,11 +2,12 @@ import React, { createContext, useReducer } from "react";
 
 // Define the initial state
 const initialState = {
+  userId: null,
   username: null,
   isAuthenticated: false,
   token: null,
   currentClan: null,
-  clans: null,
+  clans: [],
 };
 
 // Create the context
@@ -18,14 +19,15 @@ const authReducer = (state, action) => {
     case "LOGIN":
       return {
         ...state,
+        userId: action.payload.userId,
         username: action.payload.username,
         isAuthenticated: true,
         token: action.payload.token,
-        clans: action.payload.clans,
       };
     case "LOGOUT":
       return {
         ...state,
+        userId: null,
         username: null,
         isAuthenticated: false,
         token: null,
@@ -37,6 +39,11 @@ const authReducer = (state, action) => {
         ...state,
         currentClan: action.payload.clanName,
       };
+    case "CLANLIST":
+      return {
+        ...state,
+        clans: action.payload.clans,
+      };
     default:
       return state;
   }
@@ -46,10 +53,10 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = ({ username, isAuthenticated, token, clans }) => {
+  const login = ({ userId, username, isAuthenticated, token }) => {
     dispatch({
       type: "LOGIN",
-      payload: { username, isAuthenticated, token, clans },
+      payload: { userId, username, isAuthenticated, token },
     });
   };
 
@@ -62,8 +69,14 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "SELECTCLAN", payload: { clanName } });
   };
 
+  const clanList = (clans) => {
+    dispatch({ type: "CLANLIST", payload: { clans } });
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, selectClan }}>
+    <AuthContext.Provider
+      value={{ ...state, login, logout, selectClan, clanList }}
+    >
       {children}
     </AuthContext.Provider>
   );

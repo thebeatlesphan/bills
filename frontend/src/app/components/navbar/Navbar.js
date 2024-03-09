@@ -15,8 +15,6 @@ function Navbar() {
   return (
     <nav className={styles.navbar}>
       <ul className={styles.unordered}>
-        <li>Group</li>
-        <li>Expense</li>
         <li className={styles.username} onClick={handleMenu}>
           {username}
         </li>
