@@ -8,6 +8,7 @@ import InputField from "./components/form/InputField";
 import Button from "./components/button/Button";
 import CurrentClan from "./components/currentclan/CurrentClan";
 import Expense from "./components/expense/Expense";
+import ExpenseOverview from "./components/expense/ExpenseOverview";
 
 const Home = () => {
   const { isAuthenticated, currentClan, expenses: clanExpenses } = useAuth();
@@ -80,6 +81,7 @@ const Home = () => {
 
   return (
     <div className={styles.home}>
+      <div className={styles.background}></div>
       {isAuthenticated ? (
         <>
           <Navbar />
@@ -99,47 +101,54 @@ const Home = () => {
                 disabled={clanForm == "" ? true : false}
               />
             </Form>
+            {clanExpenses == null ? (
+              <></>
+            ) : (
+              <ExpenseOverview clanExpenses={clanExpenses} />
+            )}
             {currentClan == null ? (
               <></>
             ) : (
-              <Form title="Expense" onSubmit={handleExpenseSubmit}>
-                <InputField
-                  type="text"
-                  label="Expense"
-                  value={expenseForm.expense}
-                  onChange={(e) =>
-                    handleExpenseChange("expense", e.target.value)
-                  }
-                ></InputField>
-                <InputField
-                  type="text"
-                  label="Amount"
-                  value={expenseForm.amount}
-                  onChange={(e) =>
-                    handleExpenseChange("amount", e.target.value)
-                  }
-                ></InputField>
-                <InputField
-                  type="date"
-                  label="Date"
-                  value={expenseForm.expenseDate}
-                  onChange={(e) =>
-                    handleExpenseChange("expenseDate", e.target.value)
-                  }
-                ></InputField>
+              <>
+                <Form title="Expense" onSubmit={handleExpenseSubmit}>
+                  <InputField
+                    type="text"
+                    label="Expense"
+                    value={expenseForm.expense}
+                    onChange={(e) =>
+                      handleExpenseChange("expense", e.target.value)
+                    }
+                  ></InputField>
+                  <InputField
+                    type="text"
+                    label="Amount"
+                    value={expenseForm.amount}
+                    onChange={(e) =>
+                      handleExpenseChange("amount", e.target.value)
+                    }
+                  ></InputField>
+                  <InputField
+                    type="date"
+                    label="Date"
+                    value={expenseForm.expenseDate}
+                    onChange={(e) =>
+                      handleExpenseChange("expenseDate", e.target.value)
+                    }
+                  ></InputField>
 
-                <Button
-                  type="submit"
-                  label="Add Expense"
-                  disabled={
-                    expenseForm.amount == "" ||
-                    expenseForm.expense == "" ||
-                    expenseForm.expenseDate == ""
-                      ? true
-                      : false
-                  }
-                />
-              </Form>
+                  <Button
+                    type="submit"
+                    label="Add Expense"
+                    disabled={
+                      expenseForm.amount == "" ||
+                      expenseForm.expense == "" ||
+                      expenseForm.expenseDate == ""
+                        ? true
+                        : false
+                    }
+                  />
+                </Form>
+              </>
             )}
             {clanExpenses == null ? (
               <></>

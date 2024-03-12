@@ -34,7 +34,7 @@ const authReducer = (state, action) => {
         token: null,
         currentClan: null,
         clans: null,
-        expense: null,
+        expenses: null,
       };
     case "SELECTCLAN":
       return {

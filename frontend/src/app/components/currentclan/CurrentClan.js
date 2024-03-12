@@ -137,12 +137,14 @@ const CurrentClan = (...props) => {
             <Button label="Remove Member" />
             <Button label="Delete Clan" />
           </div>
-          <div>
-            <div>Clan Members</div>
+          <div className={styles.clanMembersTitle}>Clan Members</div>
+          <div className={styles.clanMembers}>
             {members == null ? (
               <></>
             ) : (
-              members.map((member) => <li key={member.username}>{member.username}</li>)
+              members.map((member) => (
+                <div key={member.username}>{member.username}</div>
+              ))
             )}
           </div>
         </div>

@@ -34,3 +34,17 @@
   justify-content: center;
   gap: 2em;
 }
+
+.clanMembersTitle {
+  text-align: center;
+  padding: 1em;
+  font-weight: bold;
+}
+
+.clanMembers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  padding: 1em;
+  gap: 1em;
+}
