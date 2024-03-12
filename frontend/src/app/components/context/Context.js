@@ -7,7 +7,8 @@ const initialState = {
   isAuthenticated: false,
   token: null,
   currentClan: null,
-  clans: [],
+  clans: null,
+  expenses: null,
 };
 
 // Create the context
@@ -33,11 +34,17 @@ const authReducer = (state, action) => {
         token: null,
         currentClan: null,
         clans: null,
+        expense: null,
       };
     case "SELECTCLAN":
       return {
         ...state,
         currentClan: action.payload.clanName,
+      };
+    case "CLANEXPENSES":
+      return {
+        ...state,
+        expenses: action.payload.expenses,
       };
     case "CLANLIST":
       return {
@@ -73,9 +80,13 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "CLANLIST", payload: { clans } });
   };
 
+  const clanExpenses = (expenses) => {
+    dispatch({ type: "CLANEXPENSES", payload: { expenses } });
+  };
+
   return (
     <AuthContext.Provider
-      value={{ ...state, login, logout, selectClan, clanList }}
+      value={{ ...state, login, logout, selectClan, clanList, clanExpenses }}
     >
       {children}
     </AuthContext.Provider>

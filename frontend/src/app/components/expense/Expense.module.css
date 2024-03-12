@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  border: 0.1em solid black;
+  border-radius: 0.5em;
+  padding: 1em;
+  margin: 0.5em;
+}

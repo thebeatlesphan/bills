@@ -7,7 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RepositoryRestResource(collectionResourceRel = "usergroup", path = "usergroup")
+@RepositoryRestResource(collectionResourceRel = "userclan", path = "userclan")
 public interface UserClanRepository
     extends
     PagingAndSortingRepository<UserClan, Integer>, CrudRepository<UserClan, Integer> {
@@ -15,4 +15,6 @@ public interface UserClanRepository
       List<UserClan> findByClanId(@Param("clan_id") Integer clanId);
 
       List<UserClan> findByUserId(@Param("user_id") Integer userId);
+
+      List<UserClan> findByUserIdAndClanId(@Param("user_id") Integer userId, @Param("clan_id") Integer clanId);
 }

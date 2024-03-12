@@ -57,4 +57,8 @@ public class Expense {
   public void setExpenseDate(LocalDate expenseDate) {
     this.expenseDate = expenseDate;
   }
+
+  public String toString() {
+    return name + expenseDate + amount; 
+  }
 }

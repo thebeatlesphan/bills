@@ -3,7 +3,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border: solid black 0.1px;
+  border: solid black 0.1em;
+  margin: 0.5em;
+  border-radius: 0.5em;
 }
 
 .current {
@@ -11,7 +13,6 @@
   padding: 1em;
   font-size: 1.5em;
   font-weight: bold;
-  
 }
 
 .dropdown div li {

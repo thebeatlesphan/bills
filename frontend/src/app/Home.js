@@ -7,9 +7,10 @@ import Form from "./components/form/Form";
 import InputField from "./components/form/InputField";
 import Button from "./components/button/Button";
 import CurrentClan from "./components/currentclan/CurrentClan";
+import Expense from "./components/expense/Expense";
 
 const Home = () => {
-  const { isAuthenticated, currentClan } = useAuth();
+  const { isAuthenticated, currentClan, expenses: clanExpenses } = useAuth();
   const [clanForm, setClanForm] = useState("");
   const [expenseForm, setExpenseForm] = useState({
     expense: "",
@@ -74,6 +75,7 @@ const Home = () => {
 
     const reply = await response.json();
     console.log(reply);
+    setExpenseForm({ expense: "", amount: "", expenseDate: "" });
   };
 
   return (
@@ -104,6 +106,7 @@ const Home = () => {
                 <InputField
                   type="text"
                   label="Expense"
+                  value={expenseForm.expense}
                   onChange={(e) =>
                     handleExpenseChange("expense", e.target.value)
                   }
@@ -111,6 +114,7 @@ const Home = () => {
                 <InputField
                   type="text"
                   label="Amount"
+                  value={expenseForm.amount}
                   onChange={(e) =>
                     handleExpenseChange("amount", e.target.value)
                   }
@@ -118,7 +122,10 @@ const Home = () => {
                 <InputField
                   type="date"
                   label="Date"
-                  onChange={(e) => handleExpenseChange("expenseDate", e.target.value)}
+                  value={expenseForm.expenseDate}
+                  onChange={(e) =>
+                    handleExpenseChange("expenseDate", e.target.value)
+                  }
                 ></InputField>
 
                 <Button
@@ -133,6 +140,19 @@ const Home = () => {
                   }
                 />
               </Form>
+            )}
+            {clanExpenses == null ? (
+              <></>
+            ) : (
+              clanExpenses.map((exp) => (
+                <Expense
+                  key={exp.id}
+                  id={exp.id}
+                  name={exp.name}
+                  amount={exp.amount}
+                  expenseDate={exp.expenseDate}
+                ></Expense>
+              ))
             )}
           </div>
         </>
