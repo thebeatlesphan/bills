@@ -2,6 +2,7 @@ package com.example.bills.clan;
 
 import com.example.bills.association.UserClan;
 import com.example.bills.association.UserClanRepository;
+import com.example.bills.exception.UsernameAlreadyExistsException;
 import com.example.bills.jwt.JwtTokenProvider;
 import com.example.bills.response.ApiResponse;
 import com.example.bills.user.User;
@@ -10,6 +11,7 @@ import com.example.bills.user.UserRepository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -91,14 +93,52 @@ public class ClanController {
     for (UserClan c : userClans) {
       Clan clan = c.getClan();
       clans.add(clan);
-    };
+    }
 
     return ResponseEntity.ok().body(new ApiResponse<>("Clans from user retrieved", clans, new Date()));
   };
 
   @PostMapping("/addUserToClan")
-  String addUserToClan(@RequestHeader("Authorization") String bearerToken, @RequestBody String username, String clanName) {
-    return username + " " + clanName;
+  ResponseEntity<ApiResponse<?>> addUserToClan(@RequestHeader("Authorization") String bearerToken,
+      @RequestBody Map<String, String> request) {
+    try {
+      // Verify the JWT token and extract the userId
+      String jwtToken = bearerToken.substring(7);
+      String userId = jwtTokenProvider
+          .getUsernameFromToken(jwtToken)
+          .getPayload()
+          .getSubject();
+
+      // Add user logic
+      User newUser = userRepository.findByUsername(request.get("username"));
+      List<Clan> clanList = clanRepository.findByOwnerId(Integer.parseInt(userId));
+      Clan clan = null;
+      for (Clan c : clanList) {
+        if (c.getClanName().equals(request.get("clanName"))) {
+          clan = c;
+        }
+      }
+
+      // Return exception: User already belongs to the clan
+      Integer newUserId = newUser.getId();
+      Integer clanId = clan.getId();
+      if (userClanRepository.findByUserIdAndClanId(newUserId, clanId) == null) {
+        throw new UsernameAlreadyExistsException("Username already in group");
+      }
+
+      UserClan newUserClan = new UserClan(newUser, clan);
+
+      userClanRepository.save(newUserClan);
+
+      // Clan clan = clanRepository.find
+      return ResponseEntity.ok().body(new ApiResponse<>("User added to clan", null, new Date()));
+    } catch (UsernameAlreadyExistsException ex) {
+      // Return an error response for the exception
+      return ResponseEntity.badRequest().body(new ApiResponse<>("Username already in group", null, new Date()));
+    } catch (Exception ex) {
+      // Return a generic error response for other exceptions
+      return ResponseEntity.status(500).body(new ApiResponse<>(ex.getMessage(), null, new Date()));
+    }
   }
 
   @PostMapping("/test")

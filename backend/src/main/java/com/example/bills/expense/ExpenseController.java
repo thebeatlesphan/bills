@@ -2,49 +2,53 @@ package com.example.bills.expense;
 
 import com.example.bills.association.ExpenseClan;
 import com.example.bills.association.ExpenseClanRepository;
+import com.example.bills.association.UserClan;
+import com.example.bills.association.UserClanRepository;
 import com.example.bills.clan.Clan;
 import com.example.bills.clan.ClanRepository;
 import com.example.bills.jwt.JwtTokenProvider;
 import com.example.bills.response.ApiResponse;
-import com.example.bills.user.User;
-import com.example.bills.user.UserRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/expense")
 public class ExpenseController {
-  ;
-  private final UserRepository userRepository;
   private final ExpenseRepository expenseRepository;
-  private final ExpenseClanRepository expenseGroupRepository;
+  private final ExpenseClanRepository expenseClanRepository;
   private final ClanRepository clanRepository;
+  private final UserClanRepository userClanRepository;
   private final JwtTokenProvider jwtTokenProvider;
 
   @Autowired
   ExpenseController(
-      UserRepository userRepository,
       ExpenseRepository expenseRepository,
-      ExpenseClanRepository expenseGroupRepository,
+      ExpenseClanRepository expenseClanRepository,
       ClanRepository clanRepository,
+      UserClanRepository userClanRepository,
       JwtTokenProvider jwtTokenProvider) {
-    this.userRepository = userRepository;
     this.expenseRepository = expenseRepository;
-    this.expenseGroupRepository = expenseGroupRepository;
+    this.expenseClanRepository = expenseClanRepository;
     this.clanRepository = clanRepository;
+    this.userClanRepository = userClanRepository;
     this.jwtTokenProvider = jwtTokenProvider;
   }
 
@@ -73,8 +77,48 @@ public class ExpenseController {
       }
     }
     ExpenseClan newExpenseClan = new ExpenseClan(clan, newExpense);
-    expenseGroupRepository.save(newExpenseClan);
+    expenseClanRepository.save(newExpenseClan);
 
     return ResponseEntity.ok().body(new ApiResponse<>("Expense successfully added", null, new Date()));
+  }
+
+  @CrossOrigin
+  @GetMapping("/getClanExpenses")
+  ResponseEntity<ApiResponse<?>> getClanExpenses(@RequestHeader("Authorization") String bearerToken,
+      @RequestParam String clanName) {
+    // Verify JWT token
+    String jwtToken = bearerToken.substring(7);
+    String userId = jwtTokenProvider
+        .getUsernameFromToken(jwtToken)
+        .getPayload()
+        .getSubject();
+
+    System.out.println("USER: " + userId);
+    // Clan expenses logic
+    // Find id of param ClanName from user's clan list
+    List<UserClan> clanList = userClanRepository.findByUserId(Integer.parseInt(userId));
+    System.out.println("\n\n" + clanList);
+    Clan clan = null;
+    for (UserClan uc : clanList) {
+      Clan c = uc.getClan();
+      if (c.getClanName().equals(clanName)) {
+        clan = c;
+      }
+    }
+    System.out.println("\n" + clan);
+
+    // Return expenses from the found clan
+    List<Expense> clanExpenses = new ArrayList<>();
+    List<ExpenseClan> expenses = expenseClanRepository.findByClan(clan);
+    System.out.println("\n" + expenses);
+    for (ExpenseClan ec : expenses) {
+      Expense e = ec.getExpense();
+      clanExpenses.add(e);
+    }
+
+    // Sort the list by expenseDate desc
+    Collections.sort(clanExpenses, Comparator.comparing(Expense::getExpenseDate).reversed());
+    System.out.println(clanExpenses);
+    return ResponseEntity.ok().body(new ApiResponse<>("Retrieved clan expenses.", clanExpenses, new Date()));
   }
 }

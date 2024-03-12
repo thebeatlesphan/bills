@@ -8,9 +8,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RepositoryRestResource(collectionResourceRel = "expensegroup", path = "expensegroup")
+@RepositoryRestResource(collectionResourceRel = "expenseclan", path = "expenseclan")
 public interface ExpenseClanRepository
-  extends
+    extends
     PagingAndSortingRepository<ExpenseClan, Integer>,
     CrudRepository<ExpenseClan, Integer> {
   List<ExpenseClan> findByClan(@Param("clan") Clan clan);

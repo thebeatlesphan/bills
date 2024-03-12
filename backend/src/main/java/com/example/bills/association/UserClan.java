@@ -23,7 +23,8 @@ public class UserClan {
   @JoinColumn(name = "clan_id")
   private Clan clan;
 
-  public UserClan() {}
+  public UserClan() {
+  }
 
   public UserClan(User user, Clan clan) {
     this.user = user;
