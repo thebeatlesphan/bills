@@ -36,4 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 # NextJS Environment Variables
-#.env.development
+.env.development

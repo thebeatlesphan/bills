@@ -153,6 +153,7 @@ public class ClanController {
       Clan deletedClan = null;
       for (UserClan uc : userClanList) {
         Clan c = uc.getClan();
+        System.out.println("\n" + c.getOwnerId() + " " + userId);
         if (c.getOwnerId() == Integer.parseInt(userId)) {
           deletedClan = c;
           break; // Requestee is the owner of the clan
