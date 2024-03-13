@@ -12,7 +12,7 @@ const Form = ({ onSubmit, title, children, ...props }) => {
     <>
       {expand ? (
         <div className={styles.expand} onClick={handleExpand}>
-          {`Add ${title}`}
+          {title}
         </div>
       ) : (
         <form className={styles.form} onSubmit={onSubmit}>

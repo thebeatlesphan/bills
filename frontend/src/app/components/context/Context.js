@@ -72,7 +72,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const selectClan = (clanName) => {
-    console.log(clanName);
     dispatch({ type: "SELECTCLAN", payload: { clanName } });
   };
 
