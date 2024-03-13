@@ -14,11 +14,11 @@ function Navbar() {
 
   return (
     <nav className={styles.navbar}>
-      <ul className={styles.unordered}>
-        <li className={styles.username} onClick={handleMenu}>
-          {username}
-        </li>
-      </ul>
+      <div className={styles.unordered}>
+        <div className={styles.username} onClick={handleMenu}>
+          Welcome {username}
+        </div>
+      </div>
       <div className={`${styles.signOut} ${hidden}`} onClick={logout}>
         Sign Out
       </div>

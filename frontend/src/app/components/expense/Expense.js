@@ -20,7 +20,7 @@ const Expense = (props) => {
     "#8A2BE2", // Blue Violet (December)
   ];
   const expenseStyle = {
-    backgroundColor: `${monthColors[month % monthColors.length]}`,
+    backgroundColor: `${monthColors[(month % monthColors.length) - 1]}`,
   };
 
   return (
