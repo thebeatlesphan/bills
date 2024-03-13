@@ -2,6 +2,7 @@ package com.example.bills.clan;
 
 import com.example.bills.association.UserClan;
 import com.example.bills.association.UserClanRepository;
+import com.example.bills.exception.UserIsNotClanOwnerException;
 import com.example.bills.exception.UsernameAlreadyExistsException;
 import com.example.bills.jwt.JwtTokenProvider;
 import com.example.bills.response.ApiResponse;
@@ -16,6 +17,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -104,10 +106,7 @@ public class ClanController {
     try {
       // Verify the JWT token and extract the userId
       String jwtToken = bearerToken.substring(7);
-      String userId = jwtTokenProvider
-          .getUsernameFromToken(jwtToken)
-          .getPayload()
-          .getSubject();
+      String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
 
       // Add user logic
       User newUser = userRepository.findByUsername(request.get("username"));
@@ -138,6 +137,39 @@ public class ClanController {
     } catch (Exception ex) {
       // Return a generic error response for other exceptions
       return ResponseEntity.status(500).body(new ApiResponse<>(ex.getMessage(), null, new Date()));
+    }
+  }
+
+  @DeleteMapping("/delete")
+  ResponseEntity<ApiResponse<?>> deleteClan(@RequestHeader("Authorization") String bearerToken,
+      @RequestParam String clanName) {
+    try {
+      // Verify JWT token
+      String jwtToken = bearerToken.substring(7);
+      String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
+
+      // Delete clan logic
+      List<UserClan> userClanList = userClanRepository.findByUserId(Integer.parseInt(userId));
+      Clan deletedClan = null;
+      for (UserClan uc : userClanList) {
+        Clan c = uc.getClan();
+        if (c.getOwnerId() == Integer.parseInt(userId)) {
+          deletedClan = c;
+          break; // Requestee is the owner of the clan
+        }
+      }
+
+      if (deletedClan == null) {
+        // If requestee was not the clan owner
+        throw new UserIsNotClanOwnerException();
+      }
+
+      clanRepository.delete(deletedClan);
+      return ResponseEntity.ok().body(new ApiResponse<>("Clan deleted", null, new Date()));
+    } catch (UserIsNotClanOwnerException ex) {
+      return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
+    } catch (Exception ex) {
+      return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     }
   }
 

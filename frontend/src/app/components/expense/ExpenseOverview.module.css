@@ -1,7 +1,12 @@
 .container {
-    background-color: white;
-    border: 0.1em solid black;
-    border-radius: 0.5em;
-    margin: 0.5em;
-    padding: 0.5em;
+  background-color: white;
+  border: 0.1em solid black;
+  border-radius: 0.5em;
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
 }

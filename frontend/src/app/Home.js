@@ -88,7 +88,7 @@ const Home = () => {
           <div className={styles.container}>
             <h1 className={styles.h1}> bills</h1>
             <CurrentClan />
-            <Form title="Clan" onSubmit={handleClanSubmit}>
+            <Form title="Add Clan" onSubmit={handleClanSubmit}>
               <InputField
                 type="text"
                 label="Clan Name"
@@ -110,7 +110,7 @@ const Home = () => {
               <></>
             ) : (
               <>
-                <Form title="Expense" onSubmit={handleExpenseSubmit}>
+                <Form title="Add Expense" onSubmit={handleExpenseSubmit}>
                   <InputField
                     type="text"
                     label="Expense"

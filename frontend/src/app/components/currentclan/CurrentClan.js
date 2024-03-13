@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "../context/Context";
 import Button from "../button/Button";
 import styles from "./CurrentClan.module.css";
@@ -11,7 +11,17 @@ const CurrentClan = (...props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newMember, setNewMember] = useState("");
   const [members, setMembers] = useState(null);
+  const [canDelete, setCanDelete] = useState(false);
   const transClass = isOpen ? styles.clans : styles.hidden;
+  const dialogRef = useRef();
+
+  const showModal = () => {
+    dialogRef.current.showModal();
+  };
+
+  const onCancel = () => {
+    dialogRef.current.close();
+  };
 
   const handleClansList = async () => {
     // toggle clan list dropdown
@@ -61,7 +71,6 @@ const CurrentClan = (...props) => {
     } else {
       const _reply = await _response.json();
       clanExpenses(_reply.data);
-      console.log(_reply.data);
     }
   };
 
@@ -94,6 +103,27 @@ const CurrentClan = (...props) => {
     }
   };
 
+  const handleCanDelete = () => {
+    setCanDelete((prev) => !prev);
+  };
+
+  const handleDeleteClan = async (e) => {
+    e.preventDefault();
+
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/delete?clanName=${currentClan}`;
+    const jwtToken = sessionStorage.getItem("jwtToken");
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+
+    const reply = await response.json();
+    console.log(reply);
+  };
+
   return (
     <div className={styles.dropdown}>
       <Button
@@ -119,24 +149,46 @@ const CurrentClan = (...props) => {
         ""
       ) : (
         <div>
-          <div className={styles.current}>Clan {currentClan}</div>
-          <div className={styles.buttons}>
-            <Form title="Member" onSubmit={handleSubmitNewMember}>
-              <InputField
-                type="text"
-                label="Username"
-                value={newMember}
-                onChange={handleNewMember}
-              />
-              <Button
-                type="submit"
-                label="Add Member"
-                disabled={newMember == "" ? true : false}
-              />
-            </Form>
-            <Button label="Remove Member" />
-            <Button label="Delete Clan" />
+          <div className={styles.current}>
+            Clan {currentClan}
+            <Button label="Manage Clan" onClick={showModal} />
           </div>
+          <dialog className={styles.dialog} ref={dialogRef}>
+            <div className={styles.dialogcontainer}>
+              <div className={styles.buttons}>
+                <Form title="Add Member" onSubmit={handleSubmitNewMember}>
+                  <InputField
+                    type="text"
+                    label="Username"
+                    value={newMember}
+                    onChange={handleNewMember}
+                  />
+                  <Button
+                    type="submit"
+                    label="Add Member"
+                    disabled={newMember == "" ? true : false}
+                  />
+                </Form>
+                <Form title="Remove Member">
+                  <Button label="Remove Member" />
+                </Form>
+                <Form title="Delete Clan" onSubmit={handleDeleteClan}>
+                  <label>Are you sure you want to delete this clan?</label>
+                  <input
+                    type="checkbox"
+                    onChange={handleCanDelete}
+                    value={canDelete}
+                  ></input>
+                  <Button
+                    type="submit"
+                    label="DELETE"
+                    disabled={!canDelete ? true : false}
+                  />
+                </Form>
+              </div>
+              <Button label="Close" onClick={onCancel} />
+            </div>
+          </dialog>
           <div className={styles.clanMembersTitle}>Clan Members</div>
           <div className={styles.clanMembers}>
             {members == null ? (

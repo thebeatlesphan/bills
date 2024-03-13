@@ -2,11 +2,6 @@ import Chart from "../chart/Charts";
 import styles from "./ExpenseOverview.module.css";
 
 const ExpenseOverview = (props) => {
-  let total = 0;
-  props.clanExpenses.forEach((element) => {
-    total += element.amount;
-  });
-
   let monthlyTotals = {
     "01": 0,
     "02": 0,
@@ -27,6 +22,26 @@ const ExpenseOverview = (props) => {
     monthlyTotals[_month] += exp.amount;
   });
 
+  // maintain calendar order
+  const order = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+  ];
+  let _monthlyTotals = [];
+  order.forEach((month) => {
+    _monthlyTotals.push(monthlyTotals[month]);
+  });
+
   const currentDate = new Date().toLocaleDateString();
   const monthDigit = new Date().getMonth();
   const monthString = [
@@ -44,14 +59,18 @@ const ExpenseOverview = (props) => {
     "Dec",
   ];
 
-  console.log("total is: ", total);
   return (
     <div className={styles.container}>
-      <div>Current Date: {currentDate}</div>
-      <div>
-        {monthString[monthDigit]} Total: ${total}
+      <div className={styles.info}>
+        <div>
+          <div>Current Date: {currentDate}</div>
+          <div>
+            {monthString[monthDigit]} Total: ${_monthlyTotals[monthDigit]}
+          </div>
+        </div>
+        <div>hello</div>
       </div>
-      <Chart id="420" data={Object.values(monthlyTotals)}></Chart>
+      <Chart id="420" data={_monthlyTotals}></Chart>
     </div>
   );
 };
