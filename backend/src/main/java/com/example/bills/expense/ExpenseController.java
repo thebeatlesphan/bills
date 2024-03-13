@@ -93,11 +93,9 @@ public class ExpenseController {
         .getPayload()
         .getSubject();
 
-    System.out.println("USER: " + userId);
     // Clan expenses logic
     // Find id of param ClanName from user's clan list
     List<UserClan> clanList = userClanRepository.findByUserId(Integer.parseInt(userId));
-    System.out.println("\n\n" + clanList);
     Clan clan = null;
     for (UserClan uc : clanList) {
       Clan c = uc.getClan();
@@ -105,12 +103,10 @@ public class ExpenseController {
         clan = c;
       }
     }
-    System.out.println("\n" + clan);
 
     // Return expenses from the found clan
     List<Expense> clanExpenses = new ArrayList<>();
     List<ExpenseClan> expenses = expenseClanRepository.findByClan(clan);
-    System.out.println("\n" + expenses);
     for (ExpenseClan ec : expenses) {
       Expense e = ec.getExpense();
       clanExpenses.add(e);
@@ -118,7 +114,6 @@ public class ExpenseController {
 
     // Sort the list by expenseDate desc
     Collections.sort(clanExpenses, Comparator.comparing(Expense::getExpenseDate).reversed());
-    System.out.println(clanExpenses);
     return ResponseEntity.ok().body(new ApiResponse<>("Retrieved clan expenses.", clanExpenses, new Date()));
   }
 }

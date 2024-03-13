@@ -2,6 +2,8 @@ package com.example.bills.association;
 
 import com.example.bills.clan.Clan;
 import com.example.bills.expense.Expense;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +17,7 @@ public class ExpenseClan {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "clan_id")
   private Clan clan;
 
