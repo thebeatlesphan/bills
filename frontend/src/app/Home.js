@@ -75,8 +75,13 @@ const Home = () => {
     });
 
     const reply = await response.json();
-    console.log(reply);
-    setExpenseForm({ expense: "", amount: "", expenseDate: "" });
+    if (!response.ok) {
+      window.alert("Failed to add expense");
+      console.log(reply);
+    } else {
+      console.log(reply);
+      setExpenseForm({ expense: "", amount: "", expenseDate: "" });
+    }
   };
 
   return (

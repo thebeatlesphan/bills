@@ -151,10 +151,12 @@ public class ClanController {
       // Delete clan logic
       List<UserClan> userClanList = userClanRepository.findByUserId(Integer.parseInt(userId));
       Clan deletedClan = null;
+      System.out.println("BEFORE THE FOR LOOP");
       for (UserClan uc : userClanList) {
         Clan c = uc.getClan();
         System.out.println("\n" + c.getOwnerId() + " " + userId);
         if (c.getOwnerId() == Integer.parseInt(userId)) {
+          System.out.println("Are we ever getting here");
           deletedClan = c;
           break; // Requestee is the owner of the clan
         }

@@ -120,8 +120,12 @@ const CurrentClan = (...props) => {
       },
     });
 
-    const reply = await response.json();
-    console.log(reply);
+    if (!response.ok) {
+      window.alert("Cannot delete clan");
+      handleCanDelete();
+    } else {
+      const reply = await response.json();
+    }
   };
 
   return (
@@ -156,7 +160,7 @@ const CurrentClan = (...props) => {
           <dialog className={styles.dialog} ref={dialogRef}>
             <div className={styles.dialogcontainer}>
               <div className={styles.buttons}>
-                <Form title="Add Member" onSubmit={handleSubmitNewMember}>
+                <Form title="Add" onSubmit={handleSubmitNewMember}>
                   <InputField
                     type="text"
                     label="Username"
@@ -169,8 +173,15 @@ const CurrentClan = (...props) => {
                     disabled={newMember == "" ? true : false}
                   />
                 </Form>
-                <Form title="Remove Member">
-                  <Button label="Remove Member" />
+                <Form title="Remove">
+                  {members == null ? (
+                    <></>
+                  ) : (
+                    members.map((member) => (
+                      <InputField type="checkbox" label={member.username} />
+                    ))
+                  )}
+                  <Button label="Remove Selected Member(s)" />
                 </Form>
                 <Form title="Delete Clan" onSubmit={handleDeleteClan}>
                   <label>Are you sure you want to delete this clan?</label>

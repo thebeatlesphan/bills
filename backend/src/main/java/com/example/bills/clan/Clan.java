@@ -1,11 +1,18 @@
 package com.example.bills.clan;
 
+import java.util.List;
+
+import com.example.bills.association.ExpenseClan;
+import com.example.bills.association.UserClan;
+import com.example.bills.expense.Expense;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Clan {
@@ -19,6 +26,12 @@ public class Clan {
   @Column(nullable = false)
   private Integer ownerId;
 
+  @OneToMany(mappedBy = "clan", cascade = CascadeType.ALL)
+  private List<UserClan> userClans;
+
+  @OneToMany(mappedBy = "clan", cascade = CascadeType.ALL)
+  private List<Expense> expenses;
+  
   public Integer getId() {
     return id;
   }

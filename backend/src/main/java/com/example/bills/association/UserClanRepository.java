@@ -12,9 +12,9 @@ public interface UserClanRepository
     extends
     PagingAndSortingRepository<UserClan, Integer>, CrudRepository<UserClan, Integer> {
 
-      List<UserClan> findByClanId(@Param("clan_id") Integer clanId);
+  List<UserClan> findByClanId(@Param("clan_id") Integer clanId);
 
-      List<UserClan> findByUserId(@Param("user_id") Integer userId);
+  List<UserClan> findByUserId(@Param("user_id") Integer userId);
 
-      List<UserClan> findByUserIdAndClanId(@Param("user_id") Integer userId, @Param("clan_id") Integer clanId);
+  List<UserClan> findByUserIdAndClanId(@Param("user_id") Integer userId, @Param("clan_id") Integer clanId);
 }

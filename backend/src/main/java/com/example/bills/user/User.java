@@ -1,10 +1,17 @@
 package com.example.bills.user;
 
+import java.util.List;
+
+import com.example.bills.association.ExpenseClan;
+import com.example.bills.association.UserClan;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -21,6 +28,9 @@ public class User {
 
   @Column(nullable = false)
   private String password;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<UserClan> userClan;
 
   public Integer getId() {
     return id;

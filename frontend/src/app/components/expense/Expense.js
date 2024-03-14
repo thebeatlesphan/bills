@@ -1,5 +1,11 @@
 import styles from "./Expense.module.css";
 
+const formatDate = (dateString) => {
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", options);
+};
+
 const Expense = (props) => {
   // Get the month from expenseDate
   const month = props.expenseDate.substring(5, 7);
@@ -27,9 +33,9 @@ const Expense = (props) => {
     <div className={styles.container} style={expenseStyle}>
       <div>
         <div>{props.name}</div>
-        <div>{props.expenseDate}</div>
+        <div>{formatDate(props.expenseDate)}</div>
       </div>
-      <div>{props.amount}</div>
+      <div>${props.amount}</div>
     </div>
   );
 };
