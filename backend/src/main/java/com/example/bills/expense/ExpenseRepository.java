@@ -8,6 +8,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import com.example.bills.clan.Clan;
+
 @RepositoryRestResource(collectionResourceRel = "expense", path = "expense")
 public interface ExpenseRepository
   extends PagingAndSortingRepository<Expense, Integer>, CrudRepository<Expense, Integer> {
@@ -16,4 +18,6 @@ public interface ExpenseRepository
   List<Expense> findByAmount(@Param("amount") BigDecimal amount);
 
   List<Expense> findByExpenseDate(@Param("expenseDate") LocalDate expenseDate);
+
+  List<Expense> findByClan(@Param("clan") Clan clan);
 }

@@ -1,11 +1,17 @@
 package com.example.bills.expense;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import com.example.bills.clan.Clan;
 
 @Entity
 public class Expense {
@@ -16,6 +22,10 @@ public class Expense {
   private String name;
   private BigDecimal amount;
   private LocalDate expenseDate;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "clan_id")
+  private Clan clan;
 
   public Expense() {
   }
@@ -58,7 +68,15 @@ public class Expense {
     this.expenseDate = expenseDate;
   }
 
+  public Clan getClan() {
+    return clan;
+  }
+
+  public void setClan(Clan clan) {
+    this.clan = clan;
+  }
+
   public String toString() {
-    return name + expenseDate + amount; 
+    return name + expenseDate + amount;
   }
 }
