@@ -2,6 +2,7 @@ package com.example.bills.clan;
 
 import com.example.bills.association.UserClan;
 import com.example.bills.association.UserClanRepository;
+import com.example.bills.exception.ClanNotFoundException;
 import com.example.bills.exception.UserIsNotClanOwnerException;
 import com.example.bills.exception.UsernameAlreadyExistsException;
 import com.example.bills.jwt.JwtTokenProvider;
@@ -175,6 +176,41 @@ public class ClanController {
       return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     }
   }
+
+  @DeleteMapping("/Members")
+  ResponseEntity<ApiResponse<?>> removeMembers(@RequestHeader("Authorization") String bearerToken,
+      @RequestBody Map<String, List<Object>> request) {
+    try {
+      // Verify JWT token
+      String jwtToken = bearerToken.substring(7);
+      String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
+
+      // Verify clan
+      List<UserClan> userClan = userClanRepository.findByUserId(Integer.parseInt(userId));
+      List<Object> requestClan = request.get("data");
+      System.out.println(requestClan.get(0));
+
+      Clan clan = null;
+      // for (UserClan uc : userClan) {
+      //   if (uc.getClan().getClanName().equals()) {
+      //     clan = uc.getClan();
+      //   }
+      // }
+
+      // Exception if Clan is not found
+      if (clan == null) {
+      throw new ClanNotFoundException();
+      }
+
+      Integer clanOwnerId = clan.getOwnerId();
+
+      // for (int i = 1)
+
+      return ResponseEntity.ok().body(new ApiResponse<>("Members removed", null, new Date()));
+    } catch (Exception ex) {
+      return ResponseEntity.ok().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
+    }
+  };
 
   @PostMapping("/test")
   ResponseEntity<?> test(

@@ -91,7 +91,6 @@ const Home = () => {
         <>
           <Navbar />
           <div className={styles.container}>
-            <h1 className={styles.h1}> bills</h1>
             <CurrentClan />
             <Form title="Add Clan" onSubmit={handleClanSubmit}>
               <InputField

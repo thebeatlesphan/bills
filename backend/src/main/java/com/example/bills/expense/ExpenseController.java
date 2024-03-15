@@ -4,7 +4,6 @@ import com.example.bills.association.ExpenseClanRepository;
 import com.example.bills.association.UserClan;
 import com.example.bills.association.UserClanRepository;
 import com.example.bills.clan.Clan;
-import com.example.bills.clan.ClanRepository;
 import com.example.bills.exception.ClanNotFoundException;
 import com.example.bills.jwt.JwtTokenProvider;
 import com.example.bills.response.ApiResponse;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/expense")
 public class ExpenseController {
   private final ExpenseRepository expenseRepository;
-  private final ClanRepository clanRepository;
   private final UserClanRepository userClanRepository;
   private final JwtTokenProvider jwtTokenProvider;
 
@@ -40,11 +38,9 @@ public class ExpenseController {
   ExpenseController(
       ExpenseRepository expenseRepository,
       ExpenseClanRepository expenseClanRepository,
-      ClanRepository clanRepository,
       UserClanRepository userClanRepository,
       JwtTokenProvider jwtTokenProvider) {
     this.expenseRepository = expenseRepository;
-    this.clanRepository = clanRepository;
     this.userClanRepository = userClanRepository;
     this.jwtTokenProvider = jwtTokenProvider;
   }

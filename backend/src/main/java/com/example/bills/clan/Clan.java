@@ -2,7 +2,6 @@ package com.example.bills.clan;
 
 import java.util.List;
 
-import com.example.bills.association.ExpenseClan;
 import com.example.bills.association.UserClan;
 import com.example.bills.expense.Expense;
 

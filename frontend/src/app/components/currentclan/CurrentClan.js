@@ -5,13 +5,21 @@ import styles from "./CurrentClan.module.css";
 import Form from "../form/Form";
 import InputField from "../form/InputField";
 
-const CurrentClan = (...props) => {
-  const { userId, currentClan, clans, selectClan, clanList, clanExpenses } =
-    useAuth();
+const CurrentClan = (props) => {
+  const {
+    userId,
+    currentClan,
+    clans,
+    selectClan,
+    clanList,
+    clanExpenses,
+    members,
+    membersList,
+  } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [newMember, setNewMember] = useState("");
-  const [members, setMembers] = useState(null);
   const [canDelete, setCanDelete] = useState(false);
+  const [deleteMembers, setDeleteMembers] = useState([]);
   const transClass = isOpen ? styles.clans : styles.hidden;
   const dialogRef = useRef();
 
@@ -52,7 +60,7 @@ const CurrentClan = (...props) => {
       window.alert("Failed to get clan members.");
     } else {
       const reply = await response.json();
-      setMembers(reply.data);
+      membersList(reply.data);
     }
 
     // Current expenses list
@@ -128,6 +136,40 @@ const CurrentClan = (...props) => {
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    const memberId = e.target.value;
+    if (e.target.checked) {
+      setDeleteMembers((prev) => [...prev, memberId]);
+    } else {
+      setDeleteMembers((prev) => prev.filter((id) => id !== memberId));
+    }
+  };
+
+  const handleRemoveMembers = async (e) => {
+    e.preventDefault();
+
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/Members`;
+    const jwtToken = sessionStorage.getItem("jwtToken");
+    const data = { data: [currentClan, ...deleteMembers] };
+    console.log(data);
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const reply = await response.json();
+    if (!response.ok) {
+      window.alert("Failed to remove members");
+      console.log(reply);
+    } else {
+      console.log(reply);
+    }
+  };
+
   return (
     <div className={styles.dropdown}>
       <Button
@@ -173,15 +215,21 @@ const CurrentClan = (...props) => {
                     disabled={newMember == "" ? true : false}
                   />
                 </Form>
-                <Form title="Remove">
+                <Form title="Remove" onSubmit={handleRemoveMembers}>
                   {members == null ? (
                     <></>
                   ) : (
                     members.map((member) => (
-                      <InputField type="checkbox" label={member.username} />
+                      <InputField
+                        key={member.id}
+                        type="checkbox"
+                        label={member.username}
+                        value={member.id}
+                        onChange={handleCheckboxChange}
+                      />
                     ))
                   )}
-                  <Button label="Remove Selected Member(s)" />
+                  <Button type="submit" label="Remove Selected Member(s)" />
                 </Form>
                 <Form title="Delete Clan" onSubmit={handleDeleteClan}>
                   <label>Are you sure you want to delete this clan?</label>

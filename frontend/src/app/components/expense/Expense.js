@@ -35,7 +35,7 @@ const Expense = (props) => {
         <div>{props.name}</div>
         <div>{formatDate(props.expenseDate)}</div>
       </div>
-      <div>${props.amount}</div>
+      <div className={styles.amount}>${props.amount}</div>
     </div>
   );
 };
