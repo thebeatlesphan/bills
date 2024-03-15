@@ -1,7 +1,10 @@
+import { useAuth } from "../context/Context";
 import Chart from "../chart/Charts";
 import styles from "./ExpenseOverview.module.css";
 
 const ExpenseOverview = (props) => {
+  const { membersList, members } = useAuth();
+  
   let monthlyTotals = {
     "01": 0,
     "02": 0,
@@ -59,6 +62,8 @@ const ExpenseOverview = (props) => {
     "Dec",
   ];
 
+  const owed = _monthlyTotals[monthDigit] / members.length;
+
   return (
     <div className={styles.container}>
       <div className={styles.info}>
@@ -68,7 +73,7 @@ const ExpenseOverview = (props) => {
             {monthString[monthDigit]} Total: ${_monthlyTotals[monthDigit]}
           </div>
         </div>
-        <div>hello</div>
+        <div className={styles.owed}>${owed.toFixed(2)}</div>
       </div>
       <Chart id="420" data={_monthlyTotals}></Chart>
     </div>
