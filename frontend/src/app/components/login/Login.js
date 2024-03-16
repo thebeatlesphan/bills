@@ -32,12 +32,11 @@ const Login = () => {
         body: JSON.stringify(data),
       });
 
+      const reply = await response.json();
       if (!response.ok) {
-        const error = await response.json();
-        console.log(error.message);
+        window.alert(reply.message);
       } else {
         // Save JWT to Session Storage after authenticating
-        const reply = await response.json();
         const token = reply.token;
         console.log(reply);
         sessionStorage.setItem("jwtToken", token);
