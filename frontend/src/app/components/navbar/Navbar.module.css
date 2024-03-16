@@ -17,6 +17,7 @@
   padding-inline-start: 0;
   margin-block: 0;
   padding: 0 0.5em;
+  gap: 1em;
 }
 
 .unordered div {
@@ -28,15 +29,32 @@
   align-self: flex-end;
 }
 
-.signOut {
-  background-color: white;
-  padding: 0.5em;
-  overflow: hidden;
-  cursor: pointer;
-  text-align: end;
-  font-weight: bold;
-}
-
 .hidden {
   display: none;
+}
+
+.gearbox {
+  cursor: pointer;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2em;
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.removeMember {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.x {
+  font-size: 1.3em;
+  cursor: pointer;
 }

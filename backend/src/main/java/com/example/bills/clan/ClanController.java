@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -122,8 +123,8 @@ public class ClanController {
       // Return exception: User already belongs to the clan
       Integer newUserId = newUser.getId();
       Integer clanId = clan.getId();
-      if (userClanRepository.findByUserIdAndClanId(newUserId, clanId) == null) {
-        throw new UsernameAlreadyExistsException("Username already in group");
+      if (userClanRepository.findByUserIdAndClanId(newUserId, clanId) != null) {
+        throw new UsernameAlreadyExistsException("Member already in group");
       }
 
       UserClan newUserClan = new UserClan(newUser, clan);
@@ -134,7 +135,7 @@ public class ClanController {
       return ResponseEntity.ok().body(new ApiResponse<>("User added to clan", null, new Date()));
     } catch (UsernameAlreadyExistsException ex) {
       // Return an error response for the exception
-      return ResponseEntity.badRequest().body(new ApiResponse<>("Username already in group", null, new Date()));
+      return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     } catch (Exception ex) {
       // Return a generic error response for other exceptions
       return ResponseEntity.status(500).body(new ApiResponse<>(ex.getMessage(), null, new Date()));
@@ -177,9 +178,9 @@ public class ClanController {
     }
   }
 
-  @DeleteMapping("/Members")
+  @DeleteMapping("/removeMember")
   ResponseEntity<ApiResponse<?>> removeMembers(@RequestHeader("Authorization") String bearerToken,
-      @RequestBody Map<String, List<Object>> request) {
+      @RequestBody Map<String, String> request) {
     try {
       // Verify JWT token
       String jwtToken = bearerToken.substring(7);
@@ -187,28 +188,40 @@ public class ClanController {
 
       // Verify clan
       List<UserClan> userClan = userClanRepository.findByUserId(Integer.parseInt(userId));
-      List<Object> requestClan = request.get("data");
-      System.out.println(requestClan.get(0));
-
       Clan clan = null;
-      // for (UserClan uc : userClan) {
-      //   if (uc.getClan().getClanName().equals()) {
-      //     clan = uc.getClan();
-      //   }
-      // }
+      for (UserClan uc : userClan) {
+        if (uc.getClan().getClanName().equals(request.get("clanName"))) {
+          clan = uc.getClan();
+        }
+      }
 
       // Exception if Clan is not found
       if (clan == null) {
-      throw new ClanNotFoundException();
+        throw new ClanNotFoundException();
       }
 
-      Integer clanOwnerId = clan.getOwnerId();
+      // Exception if member is the owner
+      if (clan.getOwnerId() == Integer.parseInt(request.get("memberId"))) {
+        throw new IllegalArgumentException("Member is the owner");
+      }
 
-      // for (int i = 1)
+      // Remove member logic
+      UserClan remove = userClanRepository.findByUserIdAndClanId(Integer.parseInt(request.get("memberId")),
+          clan.getId());
+
+      if (remove == null) {
+        throw new IllegalArgumentException("Selected member could not be found");
+      } else {
+        userClanRepository.delete(remove);
+      }
 
       return ResponseEntity.ok().body(new ApiResponse<>("Members removed", null, new Date()));
+    } catch (ClanNotFoundException ex) {
+      return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
+    } catch (IllegalArgumentException ex) {
+      return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     } catch (Exception ex) {
-      return ResponseEntity.ok().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
+      return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     }
   };
 
