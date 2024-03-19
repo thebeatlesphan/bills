@@ -16,5 +16,5 @@ public interface UserClanRepository
 
   List<UserClan> findByUserId(@Param("user_id") Integer userId);
 
-  List<UserClan> findByUserIdAndClanId(@Param("user_id") Integer userId, @Param("clan_id") Integer clanId);
+  UserClan findByUserIdAndClanId(@Param("user_id") Integer userId, @Param("clan_id") Integer clanId);
 }

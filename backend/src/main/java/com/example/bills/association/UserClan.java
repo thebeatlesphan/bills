@@ -21,7 +21,7 @@ public class UserClan {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne()
   @JoinColumn(name = "clan_id")
   private Clan clan;
 
