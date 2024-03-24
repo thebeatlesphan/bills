@@ -90,6 +90,7 @@ const Home = () => {
     } else {
       const _reply = await _response.json();
       clanExpenses(_reply.data);
+      console.log(_reply.data);
     }
   };
 
