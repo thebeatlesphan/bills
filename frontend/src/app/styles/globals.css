@@ -1,0 +1,65 @@
+:root {
+  /* Light mode colors */
+  --background-color-light: #f3f3f3;
+  --font-color-light: #000;
+  --bg-color-light: #fff;
+  --accent-color-light: orange;
+  --border-color-light: #ccc;
+  --border-radius-light: 8px;
+  --box-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* Dark mode colors */
+  --background-color-dark: #041f2e;
+  --font-color-dark: #fff;
+  --bg-color-dark: #093247;
+  --accent-color-dark: orange;
+  --border-color-dark: #555;
+  --border-radius-dark: 8px;
+  --box-shadow-dark: 0 2px 4px rgba(255, 255, 255, 0.1);
+
+  --disabled-color: grey;
+  --active: rgb(216, 154, 38);
+  
+  --padding: 0.5em;
+  --margin: 0.5em;
+  --border-radius: 0.5em;
+}
+
+/* Default to light mode */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: var(--background-color-light);
+    --font-color: var(--font-color-light);
+    --bg-color: var(--bg-color-light);
+    --accent-color: var(--accent-color-light);
+    --border-color: var(--border-color-light);
+    --border-radius: var(--border-radius-light);
+    --box-shadow: var(--box-shadow-light);
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--background-color-dark);
+    --font-color: var(--font-color-dark);
+    --bg-color: var(--bg-color-dark);
+    --accent-color: var(--accent-color-dark);
+    --border-color: var(--border-color-dark);
+    --border-radius: var(--border-radius-dark);
+    --box-shadow: var(--box-shadow-dark);
+  }
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  overflow-x: hidden;
+}

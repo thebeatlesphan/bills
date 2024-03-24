@@ -1,17 +1,18 @@
 .authform {
-  margin-top: 2em;
-  background-color: white;
+  margin-top: 1em;
 }
 
 .p {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--font-color);
 }
 
 .button {
+  margin-left: 1em;
   background-color: transparent;
-  color: #fc9929;
+  color: var(--active);
   font-weight: bold;
   cursor: pointer;
   border: none;

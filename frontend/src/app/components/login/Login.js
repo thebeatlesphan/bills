@@ -5,7 +5,7 @@ import Button from "../button/Button";
 import styles from "./Login.module.css";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, updateClanList, clans } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -41,11 +41,27 @@ const Login = () => {
         console.log(reply);
         sessionStorage.setItem("jwtToken", token);
 
-        // Call onLogin
+        // Update context
         onLogin(reply);
+
+        // Fetch user's clan list
+        handleClanMonthlyList(reply.userId);
       }
     } catch (error) {
       console.error("Error during login: ", error);
+    }
+  };
+
+  const handleClanMonthlyList = async (userId) => {
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/getFromUserId?userId=${userId}`;
+    const response = await fetch(url);
+
+    const reply = await response.json();
+    console.log(reply);
+    if (!response.ok) {
+      window.alert(reply.message);
+    } else {
+      updateClanList(reply.data);
     }
   };
 

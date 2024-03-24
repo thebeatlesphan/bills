@@ -1,6 +1,5 @@
 package com.example.bills.expense;
 
-import com.example.bills.association.ExpenseClanRepository;
 import com.example.bills.association.UserClan;
 import com.example.bills.association.UserClanRepository;
 import com.example.bills.clan.Clan;
@@ -30,14 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/expense")
 public class ExpenseController {
-  private final ExpenseRepository expenseRepository;
   private final UserClanRepository userClanRepository;
   private final JwtTokenProvider jwtTokenProvider;
+  private final ExpenseRepository expenseRepository;
 
   @Autowired
   ExpenseController(
       ExpenseRepository expenseRepository,
-      ExpenseClanRepository expenseClanRepository,
       UserClanRepository userClanRepository,
       JwtTokenProvider jwtTokenProvider) {
     this.expenseRepository = expenseRepository;

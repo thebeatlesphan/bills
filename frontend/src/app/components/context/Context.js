@@ -38,7 +38,7 @@ const authReducer = (state, action) => {
         expenses: null,
         members: null,
       };
-    case "SELECTCLAN":
+    case "UPDATECURRENTCLAN":
       return {
         ...state,
         currentClan: action.payload.clanName,
@@ -48,7 +48,7 @@ const authReducer = (state, action) => {
         ...state,
         expenses: action.payload.expenses,
       };
-    case "CLANLIST":
+    case "UPDATECLANLIST":
       return {
         ...state,
         clans: action.payload.clans,
@@ -78,12 +78,12 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "LOGOUT" });
   };
 
-  const selectClan = (clanName) => {
-    dispatch({ type: "SELECTCLAN", payload: { clanName } });
+  const updateCurrentClan = (clanName) => {
+    dispatch({ type: "UPDATECURRENTCLAN", payload: { clanName } });
   };
 
-  const clanList = (clans) => {
-    dispatch({ type: "CLANLIST", payload: { clans } });
+  const updateClanList = (clans) => {
+    dispatch({ type: "UPDATECLANLIST", payload: { clans } });
   };
 
   const clanExpenses = (expenses) => {
@@ -96,7 +96,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ ...state, login, logout, selectClan, clanList, clanExpenses, membersList }}
+      value={{
+        ...state,
+        login,
+        logout,
+        updateCurrentClan,
+        updateClanList,
+        clanExpenses,
+        membersList,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -9,46 +9,24 @@ import Button from "./components/button/Button";
 import CurrentClan from "./components/currentclan/CurrentClan";
 import Expense from "./components/expense/Expense";
 import ExpenseOverview from "./components/expense/ExpenseOverview";
+import ClanList from "./components/clanlist/ClanList";
 
 const Home = () => {
-  const { isAuthenticated, currentClan, expenses: clanExpenses } = useAuth();
-  const [clanForm, setClanForm] = useState("");
+  const {
+    isAuthenticated,
+    currentClan,
+    expenses,
+    clans,
+    updateCurrentClan,
+    membersList,
+    clanExpenses,
+  } = useAuth();
+
   const [expenseForm, setExpenseForm] = useState({
     expense: "",
     amount: "",
     expenseDate: "",
   });
-
-  const handleClanChange = (e) => {
-    setClanForm(e.target.value);
-  };
-
-  const handleClanSubmit = async (e) => {
-    e.preventDefault();
-
-    const url = `${process.env.NEXT_PUBLIC_API}api/clan/add`;
-    const token = sessionStorage.getItem("jwtToken");
-    const data = {
-      clanName: clanForm,
-    };
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      window.alert("Failed to add clan. Please try again.");
-      setClanForm("");
-    } else {
-      setClanForm("");
-    }
-  };
-
   const handleExpenseChange = (fieldName, value) => {
     setExpenseForm({
       ...expenseForm,
@@ -62,8 +40,6 @@ const Home = () => {
     const url = `${process.env.NEXT_PUBLIC_API}api/expense/add`;
     const token = sessionStorage.getItem("jwtToken");
     const data = { ...expenseForm, clanName: currentClan };
-
-    console.log(data);
 
     const response = await fetch(url, {
       method: "POST",
@@ -79,36 +55,68 @@ const Home = () => {
       window.alert("Failed to add expense");
       console.log(reply);
     } else {
-      console.log(reply);
       setExpenseForm({ expense: "", amount: "", expenseDate: "" });
+    }
+  };
+
+  const handleSelectCurrentClan = async (clanName) => {
+    // Update context
+    updateCurrentClan(clanName);
+
+    // Current members list
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/getFromClanName?clanName=${clanName}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      window.alert("Failed to get clan members.");
+    } else {
+      const reply = await response.json();
+      membersList(reply.data);
+    }
+
+    // Current expenses list
+    const _url = `${process.env.NEXT_PUBLIC_API}api/expense/getClanExpenses?clanName=${clanName}`;
+    const token = sessionStorage.getItem("jwtToken");
+    const _response = await fetch(_url, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!_response.ok) {
+      window.alert("Failed to get clan expenses.");
+    } else {
+      const _reply = await _response.json();
+      clanExpenses(_reply.data);
     }
   };
 
   return (
     <div className={styles.home}>
       <div className={styles.background}></div>
+      <div>hello!</div>
       {isAuthenticated ? (
         <>
           <Navbar />
           <div className={styles.container}>
-            <CurrentClan />
-            <Form title="Add Clan" onSubmit={handleClanSubmit}>
-              <InputField
-                type="text"
-                label="Clan Name"
-                value={clanForm}
-                onChange={handleClanChange}
-              />
-              <Button
-                type="submit"
-                label="Add Clan"
-                disabled={clanForm == "" ? true : false}
-              />
-            </Form>
-            {clanExpenses == null ? (
+            {clans == null ? (
+              <div>Please add or join a clan</div>
+            ) : (
+              clans.map((clan) => (
+                <ClanList
+                  {...clan}
+                  onClick={() => handleSelectCurrentClan(clan.clan.clanName)}
+                />
+              ))
+            )}
+            {currentClan == null ? <></> : <CurrentClan />}
+           
+            {expenses == null ? (
               <></>
             ) : (
-              <ExpenseOverview clanExpenses={clanExpenses} />
+              <ExpenseOverview expenses={expenses} />
             )}
             {currentClan == null ? (
               <></>
@@ -154,10 +162,10 @@ const Home = () => {
                 </Form>
               </>
             )}
-            {clanExpenses == null ? (
+            {expenses == null ? (
               <></>
             ) : (
-              clanExpenses.map((exp) => (
+              expenses.map((exp) => (
                 <Expense
                   key={exp.id}
                   id={exp.id}

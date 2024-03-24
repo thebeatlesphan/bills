@@ -9,6 +9,7 @@ function Navbar() {
   const { username, logout, currentClan, members } = useAuth();
   const [canDelete, setCanDelete] = useState(false);
   const [newMember, setNewMember] = useState("");
+  const [clanForm, setClanForm] = useState("");
   const dialogRef = useRef();
 
   const showModal = () => {
@@ -36,11 +37,11 @@ function Navbar() {
       },
     });
 
+    const reply = await response.json();
     if (!response.ok) {
-      window.alert("Cannot delete clan");
+      window.alert(reply.message);
       handleCanDelete();
     } else {
-      const reply = await response.json();
     }
   };
 
@@ -93,6 +94,36 @@ function Navbar() {
       setNewMember("");
     } else {
       setNewMember("");
+    }
+  };
+
+  const handleClanChange = (e) => {
+    setClanForm(e.target.value);
+  };
+
+  const handleClanSubmit = async (e) => {
+    e.preventDefault();
+
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/add`;
+    const token = sessionStorage.getItem("jwtToken");
+    const data = {
+      clanName: clanForm,
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      window.alert("Failed to add clan. Please try again.");
+      setClanForm("");
+    } else {
+      setClanForm("");
     }
   };
 
@@ -159,6 +190,20 @@ function Navbar() {
               </Form>
             </>
           )}
+          
+          <Form title="Add Clan" onSubmit={handleClanSubmit}>
+            <InputField
+              type="text"
+              label="Clan Name"
+              value={clanForm}
+              onChange={handleClanChange}
+            />
+            <Button
+              type="submit"
+              label="Add Clan"
+              disabled={clanForm == "" ? true : false}
+            />
+          </Form>
           <Button onClick={logout} label="Sign Out" />
           <Button label="Close" onClick={closeModal} />
         </div>

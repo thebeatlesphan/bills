@@ -5,19 +5,22 @@ import com.example.bills.association.UserClanRepository;
 import com.example.bills.exception.ClanNotFoundException;
 import com.example.bills.exception.UserIsNotClanOwnerException;
 import com.example.bills.exception.UsernameAlreadyExistsException;
+import com.example.bills.expense.ExpenseRepository;
 import com.example.bills.jwt.JwtTokenProvider;
 import com.example.bills.response.ApiResponse;
 import com.example.bills.user.User;
+import com.example.bills.user.UserDTO;
 import com.example.bills.user.UserRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +37,7 @@ public class ClanController {
   private final UserRepository userRepository;
   private final ClanRepository clanRepository;
   private final UserClanRepository userClanRepository;
+  private final ExpenseRepository expenseRepository;
   private final JwtTokenProvider jwtTokenProvider;
 
   @Autowired
@@ -41,10 +45,12 @@ public class ClanController {
       UserRepository userRepository,
       ClanRepository clanRepository,
       UserClanRepository userClanRepository,
+      ExpenseRepository expenseRepository,
       JwtTokenProvider jwtTokenProvider) {
     this.userRepository = userRepository;
     this.clanRepository = clanRepository;
     this.userClanRepository = userClanRepository;
+    this.expenseRepository = expenseRepository;
     this.jwtTokenProvider = jwtTokenProvider;
   }
 
@@ -76,14 +82,16 @@ public class ClanController {
 
   @CrossOrigin
   @GetMapping("/getFromClanName")
+  // Return users from clan from given clanName
   ResponseEntity<ApiResponse<?>> getFromClanName(@RequestParam String clanName) {
     Clan name = clanRepository.findByClanName(clanName);
     Integer clanId = name.getId();
     List<UserClan> userClan = userClanRepository.findByClanId(clanId);
-    List<User> users = new ArrayList<User>();
+    List<UserDTO> users = new ArrayList<UserDTO>();
     for (UserClan u : userClan) {
       User user = u.getUser();
-      users.add(user);
+      UserDTO userDTO = new UserDTO(user.getId(), user.getUsername());
+      users.add(userDTO);
     }
 
     return ResponseEntity.ok().body(new ApiResponse<>("Users from clan retrieved", users, new Date()));
@@ -91,15 +99,27 @@ public class ClanController {
 
   @CrossOrigin
   @GetMapping("/getFromUserId")
+  // Return list of clans that the user has joined and their monthly budget
   ResponseEntity<ApiResponse<?>> getFromUserId(@RequestParam String userId) {
+    // Retrieve user's clan list
     List<UserClan> userClans = userClanRepository.findByUserId(Integer.parseInt(userId));
-    List<Clan> clans = new ArrayList<Clan>();
-    for (UserClan c : userClans) {
-      Clan clan = c.getClan();
-      clans.add(clan);
+
+    LocalDate currentDate = LocalDate.now();
+    int month = currentDate.getMonthValue();
+    int year = currentDate.getYear();
+
+    // Query the clan's monthly total
+    List<Map<String, Object>> clanMonthlyTotals = new ArrayList<>();
+    for (UserClan userClan : userClans) {
+      Clan clan = userClan.getClan();
+      Float monthlyTotal = expenseRepository.getTotalExpenseForMonthAndClan(month, year, clan);
+      Map<String, Object> clanData = new HashMap<>();
+      clanData.put("clan", clan);
+      clanData.put("monthlyTotal", monthlyTotal);
+      clanMonthlyTotals.add(clanData);
     }
 
-    return ResponseEntity.ok().body(new ApiResponse<>("Clans from user retrieved", clans, new Date()));
+    return ResponseEntity.ok().body(new ApiResponse<>("Clans from user retrieved", clanMonthlyTotals, new Date()));
   };
 
   @PostMapping("/addUserToClan")

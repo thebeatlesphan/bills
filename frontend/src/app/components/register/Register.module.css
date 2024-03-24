@@ -3,16 +3,18 @@
   flex-direction: column;
   gap: 0.5em;
   padding: 4em 2em;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-color);
+  color: var(--font-color);
+  border-radius: var(--border-radius);
 }
 
 .p {
-    align-self: center;
-    font-size: 2em;
+  align-self: center;
+  font-size: 2em;
+  user-select: none;
 }
 
 .form input {
-  background-color: rgb(240, 231, 231);
   border: none;
   padding: 10px 20px;
   font-size: 16px;

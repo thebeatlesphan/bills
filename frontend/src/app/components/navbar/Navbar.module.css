@@ -1,10 +1,9 @@
 .navbar {
   position: fixed;
   top: 0;
-  left: 0;
-  height: 1.3em;
   width: 100vw;
-  background-color: white;
+  background-color: var(--font-color);
+  color: var(--bg-color);
   font-size: 1.4em;
   padding: 0;
   z-index: 100;
@@ -42,6 +41,13 @@
   flex-direction: column;
   justify-content: center;
   gap: 0.2em;
+}
+
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .dialog::backdrop {
