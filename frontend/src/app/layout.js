@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "bills",
+  title: "bill",
   description: "Phan Family Expense Tracker",
 };
 
