@@ -1,4 +1,6 @@
+import Button from "../button/Button";
 import styles from "./Expense.module.css";
+import React, { useRef } from "react";
 
 const formatDate = (dateString) => {
   const options = { year: "numeric", month: "long", day: "numeric" };
@@ -7,6 +9,16 @@ const formatDate = (dateString) => {
 };
 
 const Expense = (props) => {
+  const expenseRef = useRef();
+
+  const showModal = () => {
+    expenseRef.current.showModal();
+  };
+
+  const closeModal = () => {
+    expenseRef.current.close();
+  };
+
   // Get the month from expenseDate
   const month = props.expenseDate.substring(5, 7);
 
@@ -30,13 +42,27 @@ const Expense = (props) => {
   };
 
   return (
-    <div className={styles.container} style={expenseStyle}>
-      <div>
-        <div>{props.name}</div>
-        <div>{formatDate(props.expenseDate)}</div>
+    <>
+      <div
+        className={styles.container}
+        style={expenseStyle}
+        onClick={showModal}
+      >
+        <div>
+          <div>{props.name}</div>
+          <div>{formatDate(props.expenseDate)}</div>
+        </div>
+        <div className={styles.amount}>${props.amount.toFixed(2)}</div>
       </div>
-      <div className={styles.amount}>${props.amount}</div>
-    </div>
+      
+      <dialog
+        className={styles.expenseDialog}
+        ref={expenseRef}
+        onClick={closeModal}
+      >
+        {props.name} hello
+      </dialog>
+    </>
   );
 };
 

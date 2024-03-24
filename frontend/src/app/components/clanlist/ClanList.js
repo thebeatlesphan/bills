@@ -1,14 +1,16 @@
 import styles from "./ClanList.module.css";
-// clan.clan clan.monthlyTotal
 
-const ClanList = (props) => {
+const ClanList = ({ isActive, ...props }) => {
   let total = "0.00";
   if (props.monthlyTotal != null) {
     total = props.monthlyTotal;
   }
 
   return (
-    <div className={styles.container} onClick={props.onClick}>
+    <div
+      className={`${styles.container} ${isActive ? styles.active : ""}`}
+      onClick={props.onClick}
+    >
       <div className={styles.iconAndClanName}>
         <img
           className={styles.icon}
@@ -18,7 +20,7 @@ const ClanList = (props) => {
         <span>{props.clan.clanName}</span>
       </div>
       <div className={styles.total}>
-        $ {total}
+        ${total}
         <span className={styles.text}>Monthly Total</span>
       </div>
     </div>

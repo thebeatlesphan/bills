@@ -4,7 +4,7 @@ import styles from "./ExpenseOverview.module.css";
 
 const ExpenseOverview = (props) => {
   const { membersList, members } = useAuth();
-  
+
   let monthlyTotals = {
     "01": 0,
     "02": 0,
@@ -73,7 +73,10 @@ const ExpenseOverview = (props) => {
             {monthString[monthDigit]} Total: ${_monthlyTotals[monthDigit]}
           </div>
         </div>
-        <div className={styles.owed}>${owed.toFixed(2)}</div>
+        <div className={styles.owed}>
+          ${owed.toFixed(2)}
+          <div className={styles.owedText}>per person</div>
+        </div>
       </div>
       <Chart id="420" data={_monthlyTotals}></Chart>
     </div>

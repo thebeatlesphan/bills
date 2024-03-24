@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./Form.module.css";
 
-const Form = ({ onSubmit, title, children, ...props }) => {
+const Form = ({ onSubmit, title, children, isActive, ...props }) => {
   const [expand, setExpand] = useState(true);
 
   const handleExpand = () => {
@@ -16,10 +16,12 @@ const Form = ({ onSubmit, title, children, ...props }) => {
         </div>
       ) : (
         <form className={styles.form} onSubmit={onSubmit}>
-          <div className={styles.collapse} onClick={handleExpand}>
-            X
+          <div className={styles.container}>
+            <span className={styles.title}>{`${title} Form`}</span>
+            <span className={styles.collapse} onClick={handleExpand}>
+              X
+            </span>
           </div>
-          <div className={styles.title}>{`${title} Form`}</div>
           {children}
         </form>
       )}

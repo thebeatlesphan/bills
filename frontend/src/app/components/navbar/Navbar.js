@@ -16,7 +16,8 @@ function Navbar() {
     dialogRef.current.showModal();
   };
 
-  const closeModal = () => {
+  const closeModal = (e) => {
+    console.log(e);
     dialogRef.current.close();
   };
 
@@ -190,8 +191,8 @@ function Navbar() {
               </Form>
             </>
           )}
-          
-          <Form title="Add Clan" onSubmit={handleClanSubmit}>
+
+          <Form title="Create Clan" onSubmit={handleClanSubmit}>
             <InputField
               type="text"
               label="Clan Name"
@@ -200,7 +201,7 @@ function Navbar() {
             />
             <Button
               type="submit"
-              label="Add Clan"
+              label="Create Clan"
               disabled={clanForm == "" ? true : false}
             />
           </Form>

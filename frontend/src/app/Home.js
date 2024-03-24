@@ -96,28 +96,36 @@ const Home = () => {
   return (
     <div className={styles.home}>
       <div className={styles.background}></div>
-      <div>hello!</div>
       {isAuthenticated ? (
         <>
           <Navbar />
           <div className={styles.container}>
-            {clans == null ? (
-              <div>Please add or join a clan</div>
+            <div className={styles.billsContainer}>
+              <img
+                className={styles.bills}
+                src="icons/bill.png"
+                alt="bills icon from Flaticon.com"
+              />
+            </div>
+            {clans == null || clans.length == 0 ? (
+              <div className={styles.noClan}>
+                You do not belong to any clan. Please create a clan.
+              </div>
             ) : (
               clans.map((clan) => (
                 <ClanList
+                  key={clan.clan.id}
                   {...clan}
+                  isActive={clan.clan.clanName === currentClan}
                   onClick={() => handleSelectCurrentClan(clan.clan.clanName)}
                 />
               ))
             )}
+
             {currentClan == null ? <></> : <CurrentClan />}
-           
-            {expenses == null ? (
-              <></>
-            ) : (
-              <ExpenseOverview expenses={expenses} />
-            )}
+
+            {expenses == null ? <></> : <ExpenseOverview expenses={expenses} />}
+
             {currentClan == null ? (
               <></>
             ) : (
@@ -162,6 +170,7 @@ const Home = () => {
                 </Form>
               </>
             )}
+
             {expenses == null ? (
               <></>
             ) : (

@@ -20,7 +20,7 @@
   --disabled-color: grey;
   --active: rgb(216, 154, 38);
   
-  --padding: 0.5em;
+  --padding: 0.5em 1.5em;
   --margin: 0.5em;
   --border-radius: 0.5em;
 }
@@ -61,5 +61,6 @@
 
 html {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  position: relative;
   overflow-x: hidden;
 }
