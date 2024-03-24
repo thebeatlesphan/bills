@@ -1,0 +1,41 @@
+.container {
+  color: var(--font-color);
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--padding);
+  margin: var(--margin);
+  border-radius: var(--border-radius);
+}
+
+.container:hover {
+  background-color: var(--accent-color);
+}
+
+.container * {
+  user-select: none;
+}
+
+.icon {
+  height: 3em;
+  width: 3em;
+}
+
+.iconAndClanName {
+  display: flex;
+  align-items: center;
+}
+
+.total {
+  font-size: 2em;
+  display: flex;
+  flex-direction: column;
+}
+
+.text {
+  text-align: center;
+  font-size: 0.4em;
+  opacity: 70%;
+  margin-top: 0.5em;
+}

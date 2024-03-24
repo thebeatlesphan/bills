@@ -1,11 +1,8 @@
-.dropdown {
-  background-color: white;
+.container {
   position: relative;
   display: flex;
   flex-direction: column;
-  border: solid black 0.1em;
-  margin: 0.5em;
-  border-radius: 0.5em;
+  color: var(--font-color);
 }
 
 .current {

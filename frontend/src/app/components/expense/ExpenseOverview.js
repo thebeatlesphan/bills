@@ -20,7 +20,7 @@ const ExpenseOverview = (props) => {
     12: 0,
   };
 
-  props.clanExpenses.forEach((exp) => {
+  props.expenses.forEach((exp) => {
     const _month = exp.expenseDate.slice(5, 7);
     monthlyTotals[_month] += exp.amount;
   });

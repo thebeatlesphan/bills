@@ -2,9 +2,11 @@
   position: fixed;
   width: 100vw;
   height: 100vh;
+  top: 0;
   z-index: -1;
-  background-color: #e68b238e;
+  background-color: var(--background);
 }
+
 
 .home {
   position: relative;

@@ -1,17 +1,19 @@
 .button {
-  background-color: #fc9929;
-  color: white;
+  background-color: var(--active);
+  color: var(--font-color);
   padding: 10px 20px;
+  letter-spacing: 1px;
   font-size: 16px;
-  border: none;
+  font-weight: bold;
+  border-radius: var(--border-radius);
   cursor: pointer;
 }
 
 .button:hover {
-  background-color: #e68b23;
+  background-color: var(--accent-color);
 }
 
 .button:disabled {
-  background-color: grey;
+  background-color: var(--disabled-color);
   cursor: default;
 }
