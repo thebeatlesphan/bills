@@ -3,7 +3,12 @@ import styles from "./Expense.module.css";
 import React, { useRef } from "react";
 
 const formatDate = (dateString) => {
-  const options = { year: "numeric", month: "long", day: "numeric" };
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  };
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", options);
 };
@@ -54,7 +59,7 @@ const Expense = (props) => {
         </div>
         <div className={styles.amount}>${props.amount.toFixed(2)}</div>
       </div>
-      
+
       <dialog
         className={styles.expenseDialog}
         ref={expenseRef}
