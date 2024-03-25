@@ -12,20 +12,10 @@ services:
     build:
       context: .
     ports:
-      - 0.0.0.0:8080:8080
-
-  mysql:
-    image: mysql:8.0
-    ports:
-      - 3306:3306
-    volumes:
-      - bills-mysql-data:/var/lib/mysql
+      - 3000:3000
+    # the build args are defined by this key
     environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: bills
-
-volumes:
- bills-mysql-data:
+      - NEXT_PUBLIC_API=http://server:8080/
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your application. The `db-data` volume persists the

@@ -19,6 +19,7 @@ const Login = () => {
     try {
       // Make a POST request to the backend login endpoint
       const url = `${process.env.NEXT_PUBLIC_API}login`;
+      console.log(url);
       const data = {
         username: username,
         password: password,
