@@ -12,9 +12,6 @@ ARG NODE_VERSION=20.11.1
 # Use node image for base image for all stages.
 FROM node:${NODE_VERSION}-alpine as base
 
-#ANDY
-ENV NEXT_PUBLIC_API=http://69.180.45.221:8080/
-
 # Set working directory for all build stages.
 WORKDIR /usr/src/app
 

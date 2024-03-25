@@ -10,16 +10,30 @@
 services:
   backend:
     build:
-      context: .
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - 0.0.0.0:8080:8080
+    volumes:
+      - ./backend:/app
     networks:
       - bills-network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 0.0.0.0:3000:3000
+    volumes:
+      - ./frontend:/app
+    networks:
+      - bills-network
+      
   mysql:
     image: mysql:8.0
     ports:
-      - 3306:3306
+      - 0.0.0.0:3306:3306
     volumes:
       - bills-mysql-data:/var/lib/mysql
     environment:

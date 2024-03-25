@@ -20,7 +20,7 @@ const ClanList = ({ isActive, ...props }) => {
         <span>{props.clan.clanName}</span>
       </div>
       <div className={styles.total}>
-        ${total.toFixed(2)}
+        ${total}
         <span className={styles.text}>Monthly Total</span>
       </div>
     </div>
