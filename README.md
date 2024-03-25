@@ -105,4 +105,17 @@ I've been diligently studying the Spring Security architecture and documentation
 5. Spring Security
 6. JWT
 
-## March 3rd, 2024
+## March 3rd - 24th, 2024
+Implemented key features:
+1. Stateless architecture
+2. Removed ExpenseClan association/join table -> added FK to expense entity
+3. Finished endpoints for /api/clan... add, getFromClanName, getFromUserId, addUserToClan, delete, removeMember
+4. Finished endpoints for /api/expense... add, getClanExpenses
+5. Finished endpoints for api/user... all, register\
+**endpoints no longer following HATEOAS paradigm (may be considered in the future)**
+6. Now using Java Records for DTO
+7. Disabled CSRF check (will need to revisit)
+8. Implemented JWT for authentication
+9. Redesigned UI
+10. Created components for every API
+11. Re-depoloyed all 3 services (MySQL, Spring, and NextJS) to Docker Containers
