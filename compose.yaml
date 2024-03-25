@@ -9,9 +9,10 @@
 # https://github.com/docker/awesome-compose
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    image: thebeatlesphan/backend:bills-latest
     ports:
       - 0.0.0.0:8080:8080
     volumes:
@@ -20,9 +21,10 @@ services:
       - bills-network
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
+    image: thebeatlesphan/frontend:bills-latest
     ports:
       - 0.0.0.0:3000:3000
     volumes:
