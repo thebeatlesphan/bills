@@ -38,6 +38,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
+          platforms: linux/amd64,linux/arm64
           push: true
           target: final
           tags: ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.event.repository.name }}-latest
@@ -46,6 +47,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
+          platforms: linux/amd64,linux/arm64
           push: true
           target: final
           tags: ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.event.repository.name }}-latest
