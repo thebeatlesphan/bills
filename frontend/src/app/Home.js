@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AuthForm from "./components/authform/AuthForm";
 import Navbar from "./components/navbar/Navbar";
 import { useAuth } from "./components/context/Context";
@@ -27,6 +27,11 @@ const Home = () => {
     amount: "",
     expenseDate: "",
   });
+
+  useEffect(() => {
+    console.log("home rerendered");
+  }, [clans]);
+
   const handleExpenseChange = (fieldName, value) => {
     setExpenseForm({
       ...expenseForm,

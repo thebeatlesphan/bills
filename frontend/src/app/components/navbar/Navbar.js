@@ -6,7 +6,8 @@ import Form from "../form/Form";
 import InputField from "../form/InputField";
 
 function Navbar() {
-  const { username, logout, currentClan, members } = useAuth();
+  const { username, logout, currentClan, members, deleteClan, createClan } =
+    useAuth();
   const [canDelete, setCanDelete] = useState(false);
   const [newMember, setNewMember] = useState("");
   const [clanForm, setClanForm] = useState("");
@@ -43,6 +44,9 @@ function Navbar() {
       window.alert(reply.message);
       handleCanDelete();
     } else {
+      deleteClan(currentClan);
+      handleCanDelete();
+      console.log("DELETEEEDD");
     }
   };
 
@@ -102,10 +106,10 @@ function Navbar() {
     setClanForm(e.target.value);
   };
 
-  const handleClanSubmit = async (e) => {
+  const handleCreateClan = async (e) => {
     e.preventDefault();
 
-    const url = `${process.env.NEXT_PUBLIC_API}api/clan/add`;
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/createClan`;
     const token = sessionStorage.getItem("jwtToken");
     const data = {
       clanName: clanForm,
@@ -120,10 +124,13 @@ function Navbar() {
       body: JSON.stringify(data),
     });
 
+    const reply = await response.json();
+    console.log(reply);
     if (!response.ok) {
       window.alert("Failed to add clan. Please try again.");
       setClanForm("");
     } else {
+      createClan(reply.data.clan);
       setClanForm("");
     }
   };
@@ -192,7 +199,7 @@ function Navbar() {
             </>
           )}
 
-          <Form title="Create Clan" onSubmit={handleClanSubmit}>
+          <Form title="Create Clan" onSubmit={handleCreateClan}>
             <InputField
               type="text"
               label="Clan Name"
