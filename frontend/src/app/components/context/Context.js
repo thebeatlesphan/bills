@@ -38,10 +38,15 @@ const authReducer = (state, action) => {
         expenses: null,
         members: null,
       };
-    case "UPDATECURRENTCLAN":
+    case "SET_CURRENT_CLAN":
       return {
         ...state,
         currentClan: action.payload.clanName,
+      };
+    case "GET_CLANS":
+      return {
+        ...state,
+        clans: action.payload.clans,
       };
     case "CREATE_CLAN":
       return {
@@ -55,20 +60,32 @@ const authReducer = (state, action) => {
           (clan) => clan.clan.clanName != action.payload.clanName
         ),
       };
-    case "CLANEXPENSES":
+    case "GET_EXPENSES":
       return {
         ...state,
         expenses: action.payload.expenses,
       };
-    case "GET_CLANS":
+    case "ADD_EXPENSE":
       return {
         ...state,
-        clans: action.payload.clans,
+        expenses: [...state.expenses, action.payload.expense],
       };
-    case "MEMBERS":
+    case "GET_MEMBERS":
       return {
         ...state,
         members: action.payload.members,
+      };
+    case "ADD_MEMBER":
+      return {
+        ...state,
+        members: [...state.members, action.payload.member],
+      };
+    case "REMOVE_MEMBER":
+      return {
+        ...state,
+        members: state.members.filter(
+          (member) => member.id != action.payload.userId
+        ),
       };
     default:
       return state;
@@ -90,8 +107,12 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "LOGOUT" });
   };
 
-  const updateCurrentClan = (clanName) => {
-    dispatch({ type: "UPDATECURRENTCLAN", payload: { clanName } });
+  const setCurrentClan = (clanName) => {
+    dispatch({ type: "SET_CURRENT_CLAN", payload: { clanName } });
+  };
+
+  const getClans = (clans) => {
+    dispatch({ type: "GET_CLANS", payload: { clans } });
   };
 
   const createClan = (clan) => {
@@ -102,30 +123,40 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "DELETE_CLAN", payload: { clanName } });
   };
 
-  const getClans = (clans) => {
-    dispatch({ type: "GET_CLANS", payload: { clans } });
+  const getExpenses = (expenses) => {
+    dispatch({ type: "GET_EXPENSES", payload: { expenses } });
   };
 
-  const clanExpenses = (expenses) => {
-    dispatch({ type: "CLANEXPENSES", payload: { expenses } });
+  const addExpense = (expense) => {
+    dispatch({ type: "ADD_EXPENSE", payload: { expense } });
   };
 
-  const membersList = (members) => {
-    dispatch({ type: "MEMBERS", payload: { members } });
+  const getMembers = (members) => {
+    dispatch({ type: "GET_MEMBERS", payload: { members } });
   };
 
+  const addMember = (member) => {
+    dispatch({ type: "ADD_MEMBER", payload: { member } });
+  };
+
+  const removeMember = (userId) => {
+    dispatch({ type: "REMOVE_MEMBER", payload: { userId } });
+  };
   return (
     <AuthContext.Provider
       value={{
         ...state,
         login,
         logout,
-        updateCurrentClan,
+        setCurrentClan,
         createClan,
         deleteClan,
         getClans,
-        clanExpenses,
-        membersList,
+        getExpenses,
+        addExpense,
+        getMembers,
+        addMember,
+        removeMember,
       }}
     >
       {children}

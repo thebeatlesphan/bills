@@ -152,11 +152,12 @@ public class ClanController {
       }
 
       UserClan newUserClan = new UserClan(newUser, clan);
-
       userClanRepository.save(newUserClan);
 
+      UserDTO data = new UserDTO(newUserId, newUser.getUsername());
+
       // Clan clan = clanRepository.find
-      return ResponseEntity.ok().body(new ApiResponse<>("User added to clan", null, new Date()));
+      return ResponseEntity.ok().body(new ApiResponse<>("User added to clan", data, new Date()));
     } catch (UsernameAlreadyExistsException ex) {
       // Return an error response for the exception
       return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));

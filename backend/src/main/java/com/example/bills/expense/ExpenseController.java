@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,6 @@ public class ExpenseController {
       @RequestHeader("Authorization") String bearerToken,
       @RequestBody Map<String, String> request) {
     try {
-
       // Verify the JWT token and extract the userId
       String jwtToken = bearerToken.substring(7);
       String userId = jwtTokenProvider
@@ -56,17 +56,19 @@ public class ExpenseController {
           .getPayload()
           .getSubject();
 
-      // Find user's clan by name
+      // Retrieve list of user's clans
       List<UserClan> userClans = userClanRepository.findByUserId(Integer.parseInt(userId));
       Clan clan = null;
+
+      // Loop through list to find clan matching clanName
       for (UserClan uc : userClans) {
         if (uc.getClan().getClanName().equals(request.get("clanName"))) {
           clan = uc.getClan();
         }
       }
 
+      // Handle if clan is not found
       if (clan == null) {
-        // Handle if clan is not found
         throw new ClanNotFoundException();
       }
 
@@ -76,7 +78,10 @@ public class ExpenseController {
       newExpense.setClan(clan);
       expenseRepository.save(newExpense);
 
-      return ResponseEntity.ok().body(new ApiResponse<>("Expense successfully added", null, new Date()));
+      Map<String, Object> data = new HashMap<>();
+      data.put("expense", newExpense);
+
+      return ResponseEntity.ok().body(new ApiResponse<>("Expense successfully added", data, new Date()));
     } catch (ClanNotFoundException ex) {
       return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     } catch (Exception ex) {
