@@ -57,8 +57,10 @@ const Home = () => {
     });
 
     const reply = await response.json();
+    console.log(reply);
     if (!response.ok) {
       window.alert("Failed to add expense");
+      setExpenseForm({ expense: "", amount: "", expenseDate: "" });
     } else {
       addExpense(reply.data.expense);
       setExpenseForm({ expense: "", amount: "", expenseDate: "" });
@@ -92,12 +94,12 @@ const Home = () => {
       },
     });
 
+    const _reply = await _response.json();
+    console.log(_reply);
     if (!_response.ok) {
       window.alert("Failed to get clan expenses.");
     } else {
-      const _reply = await _response.json();
       getExpenses(_reply.data);
-      console.log(_reply.data);
     }
   };
 

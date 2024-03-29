@@ -66,9 +66,65 @@ const authReducer = (state, action) => {
         expenses: action.payload.expenses,
       };
     case "ADD_EXPENSE":
+      // Find the index of the currentClan
+      const clanIndex = state.clans.findIndex(
+        (element) =>
+          element.clan.clanName === action.payload.expense.clan.clanName
+      );
+
+      // Calculate new monthly total
+      const newAddTotal =
+        state.clans[clanIndex].monthlyTotal + action.payload.expense.amount;
+
+      const updatedAdd = state.clans.map((clan, index) => {
+        if (index === clanIndex) {
+          return {
+            ...clan,
+            monthlyTotal: newAddTotal,
+          };
+        }
+        return clan;
+      });
+
       return {
         ...state,
-        expenses: [...state.expenses, action.payload.expense],
+        clans: updatedAdd,
+        expenses: [...state.expenses, action.payload.expense].sort((a, b) => {
+          if (a.expenseDate > b.expenseDate) {
+            return -1;
+          } else if (a.expenseDate < b.expenseDate) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }),
+      };
+    case "DELETE_EXPENSE":
+      // Find the index of the currentClan
+      const _clanIndex = state.clans.findIndex(
+        (element) => element.clan.clanName === state.currentClan
+      );
+
+      //Calculate new monthlyTotal
+      const newDeleteTotal =
+        state.clans[_clanIndex].monthlyTotal - action.payload.expense.amount;
+
+      const updatedDeleted = state.clans.map((clan, index) => {
+        if (index === _clanIndex) {
+          return {
+            ...clan,
+            monthlyTotal: newDeleteTotal,
+          };
+        }
+        return clan;
+      });
+
+      return {
+        ...state,
+        clans: updatedDeleted,
+        expenses: state.expenses.filter(
+          (expense) => expense.id != action.payload.expense.id
+        ),
       };
     case "GET_MEMBERS":
       return {
@@ -78,7 +134,7 @@ const authReducer = (state, action) => {
     case "ADD_MEMBER":
       return {
         ...state,
-        members: [...state.members, action.payload.member],
+        members: [...state.members, action.payload.member].sort(),
       };
     case "REMOVE_MEMBER":
       return {
@@ -131,6 +187,10 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "ADD_EXPENSE", payload: { expense } });
   };
 
+  const deleteExpense = (expense) => {
+    dispatch({ type: "DELETE_EXPENSE", payload: { expense } });
+  };
+
   const getMembers = (members) => {
     dispatch({ type: "GET_MEMBERS", payload: { members } });
   };
@@ -154,6 +214,7 @@ export const AuthProvider = ({ children }) => {
         getClans,
         getExpenses,
         addExpense,
+        deleteExpense,
         getMembers,
         addMember,
         removeMember,

@@ -126,4 +126,21 @@ public class ExpenseController {
       return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     }
   }
+
+  @PostMapping("/delete")
+  ResponseEntity<ApiResponse<?>> deleteExpense(@RequestHeader("Authorization") String bearerToken,
+      @RequestBody Map<String, String> request) {
+    try {
+      // Verify JWT
+      String jwtToken = bearerToken.substring(7);
+      String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
+
+      String expenseId = request.get("expenseId");
+      expenseRepository.deleteById(Integer.parseInt(expenseId));
+      return ResponseEntity.ok().body(new ApiResponse<>("Expense has been deleted!", null, new Date()));
+    } catch (Exception ex) {
+      return ResponseEntity.ok().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
+    }
+
+  }
 }

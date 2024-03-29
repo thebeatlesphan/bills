@@ -76,7 +76,7 @@ public class ClanController {
     userClanRepository.save(newUserClan);
 
     Map<String, Object> data = new HashMap<>();
-    data.put("clan", newUserClan);
+    data.put("clan", newUserClan.getClan());
     data.put("monthlyTotal", 0.00);
 
     return ResponseEntity

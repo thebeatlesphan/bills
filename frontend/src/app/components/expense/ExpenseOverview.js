@@ -70,7 +70,7 @@ const ExpenseOverview = (props) => {
         <div>
           <div>Current Date: {currentDate}</div>
           <div>
-            {monthString[monthDigit]} Total: ${_monthlyTotals[monthDigit]}
+            {monthString[monthDigit]} Total: ${_monthlyTotals[monthDigit].toFixed(2)}
           </div>
         </div>
         <div className={styles.owed}>

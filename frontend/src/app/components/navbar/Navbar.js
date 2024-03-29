@@ -26,7 +26,6 @@ function Navbar() {
   };
 
   const closeModal = (e) => {
-    console.log(e);
     dialogRef.current.close();
   };
 
@@ -140,7 +139,7 @@ function Navbar() {
       window.alert("Failed to add clan. Please try again.");
       setClanForm("");
     } else {
-      createClan(reply.data.clan);
+      createClan(reply.data);
       setClanForm("");
     }
   };

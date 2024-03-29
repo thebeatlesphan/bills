@@ -23,7 +23,7 @@ public class Expense {
   private BigDecimal amount;
   private LocalDate expenseDate;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne()
   @JoinColumn(name = "clan_id")
   private Clan clan;
 
