@@ -43,12 +43,24 @@ const authReducer = (state, action) => {
         ...state,
         currentClan: action.payload.clanName,
       };
+    case "CREATE_CLAN":
+      return {
+        ...state,
+        clans: [...state.clans, action.payload.clan],
+      };
+    case "DELETE_CLAN":
+      return {
+        ...state,
+        clans: state.clans.filter(
+          (clan) => clan.clan.clanName != action.payload.clanName
+        ),
+      };
     case "CLANEXPENSES":
       return {
         ...state,
         expenses: action.payload.expenses,
       };
-    case "UPDATECLANLIST":
+    case "GET_CLANS":
       return {
         ...state,
         clans: action.payload.clans,
@@ -82,8 +94,16 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "UPDATECURRENTCLAN", payload: { clanName } });
   };
 
-  const updateClanList = (clans) => {
-    dispatch({ type: "UPDATECLANLIST", payload: { clans } });
+  const createClan = (clan) => {
+    dispatch({ type: "CREATE_CLAN", payload: { clan } });
+  };
+
+  const deleteClan = (clanName) => {
+    dispatch({ type: "DELETE_CLAN", payload: { clanName } });
+  };
+
+  const getClans = (clans) => {
+    dispatch({ type: "GET_CLANS", payload: { clans } });
   };
 
   const clanExpenses = (expenses) => {
@@ -101,7 +121,9 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         updateCurrentClan,
-        updateClanList,
+        createClan,
+        deleteClan,
+        getClans,
         clanExpenses,
         membersList,
       }}

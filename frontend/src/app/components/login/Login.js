@@ -5,7 +5,7 @@ import Button from "../button/Button";
 import styles from "./Login.module.css";
 
 const Login = () => {
-  const { login, updateClanList, clans } = useAuth();
+  const { login, getClans } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -62,7 +62,7 @@ const Login = () => {
     if (!response.ok) {
       window.alert(reply.message);
     } else {
-      updateClanList(reply.data);
+      getClans(reply.data);
     }
   };
 
