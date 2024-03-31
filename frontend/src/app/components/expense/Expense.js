@@ -1,5 +1,7 @@
 import styles from "./Expense.module.css";
 import React, { useRef } from "react";
+import Button from "../button/Button";
+import { useAuth } from "../context/Context";
 
 const formatDate = (dateString) => {
   const options = {
@@ -13,6 +15,8 @@ const formatDate = (dateString) => {
 };
 
 const Expense = (props) => {
+  const { deleteExpense } = useAuth();
+
   const expenseRef = useRef();
 
   const showModal = () => {
@@ -42,7 +46,31 @@ const Expense = (props) => {
     "#8A2BE2", // Blue Violet (December)
   ];
   const expenseStyle = {
-    backgroundColor: `${monthColors[(month % monthColors.length) - 1]}`,
+    backgroundColor: `${monthColors[month - 1]}`,
+  };
+
+  const handleDelete = async () => {
+    const url = `${process.env.NEXT_PUBLIC_API}api/expense/delete`;
+    const token = sessionStorage.getItem("jwtToken");
+    const data = { expenseId: props.id };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const reply = await response.json();
+    console.log(reply);
+    console.log(props);
+    if (!response.ok) {
+      window.alert(reply.message);
+    } else {
+      deleteExpense(props);
+    }
   };
 
   return (
@@ -59,12 +87,13 @@ const Expense = (props) => {
         <div className={styles.amount}>${props.amount.toFixed(2)}</div>
       </div>
 
-      <dialog
-        className={styles.expenseDialog}
-        ref={expenseRef}
-        onClick={closeModal}
-      >
-        {props.name} hello
+      <dialog className={styles.expenseDialog} ref={expenseRef}>
+        <div className={styles.expenseContainer}>
+          <div value={props.id} onClick={handleDelete}>
+            {props.id}
+          </div>
+          <Button label="Close" onClick={closeModal} />
+        </div>
       </dialog>
     </>
   );

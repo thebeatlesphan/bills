@@ -38,10 +38,15 @@ const authReducer = (state, action) => {
         expenses: null,
         members: null,
       };
-    case "UPDATECURRENTCLAN":
+    case "SET_CURRENT_CLAN":
       return {
         ...state,
         currentClan: action.payload.clanName,
+      };
+    case "GET_CLANS":
+      return {
+        ...state,
+        clans: action.payload.clans,
       };
     case "CREATE_CLAN":
       return {
@@ -55,20 +60,88 @@ const authReducer = (state, action) => {
           (clan) => clan.clan.clanName != action.payload.clanName
         ),
       };
-    case "CLANEXPENSES":
+    case "GET_EXPENSES":
       return {
         ...state,
         expenses: action.payload.expenses,
       };
-    case "GET_CLANS":
+    case "ADD_EXPENSE":
+      // Find the index of the currentClan
+      const clanIndex = state.clans.findIndex(
+        (element) =>
+          element.clan.clanName === action.payload.expense.clan.clanName
+      );
+
+      // Calculate new monthly total
+      const newAddTotal =
+        state.clans[clanIndex].monthlyTotal + action.payload.expense.amount;
+
+      const updatedAdd = state.clans.map((clan, index) => {
+        if (index === clanIndex) {
+          return {
+            ...clan,
+            monthlyTotal: newAddTotal,
+          };
+        }
+        return clan;
+      });
+
       return {
         ...state,
-        clans: action.payload.clans,
+        clans: updatedAdd,
+        expenses: [...state.expenses, action.payload.expense].sort((a, b) => {
+          if (a.expenseDate > b.expenseDate) {
+            return -1;
+          } else if (a.expenseDate < b.expenseDate) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }),
       };
-    case "MEMBERS":
+    case "DELETE_EXPENSE":
+      // Find the index of the currentClan
+      const _clanIndex = state.clans.findIndex(
+        (element) => element.clan.clanName === state.currentClan
+      );
+
+      //Calculate new monthlyTotal
+      const newDeleteTotal =
+        state.clans[_clanIndex].monthlyTotal - action.payload.expense.amount;
+
+      const updatedDeleted = state.clans.map((clan, index) => {
+        if (index === _clanIndex) {
+          return {
+            ...clan,
+            monthlyTotal: newDeleteTotal,
+          };
+        }
+        return clan;
+      });
+
+      return {
+        ...state,
+        clans: updatedDeleted,
+        expenses: state.expenses.filter(
+          (expense) => expense.id != action.payload.expense.id
+        ),
+      };
+    case "GET_MEMBERS":
       return {
         ...state,
         members: action.payload.members,
+      };
+    case "ADD_MEMBER":
+      return {
+        ...state,
+        members: [...state.members, action.payload.member].sort(),
+      };
+    case "REMOVE_MEMBER":
+      return {
+        ...state,
+        members: state.members.filter(
+          (member) => member.id != action.payload.userId
+        ),
       };
     default:
       return state;
@@ -90,8 +163,12 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "LOGOUT" });
   };
 
-  const updateCurrentClan = (clanName) => {
-    dispatch({ type: "UPDATECURRENTCLAN", payload: { clanName } });
+  const setCurrentClan = (clanName) => {
+    dispatch({ type: "SET_CURRENT_CLAN", payload: { clanName } });
+  };
+
+  const getClans = (clans) => {
+    dispatch({ type: "GET_CLANS", payload: { clans } });
   };
 
   const createClan = (clan) => {
@@ -102,30 +179,45 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "DELETE_CLAN", payload: { clanName } });
   };
 
-  const getClans = (clans) => {
-    dispatch({ type: "GET_CLANS", payload: { clans } });
+  const getExpenses = (expenses) => {
+    dispatch({ type: "GET_EXPENSES", payload: { expenses } });
   };
 
-  const clanExpenses = (expenses) => {
-    dispatch({ type: "CLANEXPENSES", payload: { expenses } });
+  const addExpense = (expense) => {
+    dispatch({ type: "ADD_EXPENSE", payload: { expense } });
   };
 
-  const membersList = (members) => {
-    dispatch({ type: "MEMBERS", payload: { members } });
+  const deleteExpense = (expense) => {
+    dispatch({ type: "DELETE_EXPENSE", payload: { expense } });
   };
 
+  const getMembers = (members) => {
+    dispatch({ type: "GET_MEMBERS", payload: { members } });
+  };
+
+  const addMember = (member) => {
+    dispatch({ type: "ADD_MEMBER", payload: { member } });
+  };
+
+  const removeMember = (userId) => {
+    dispatch({ type: "REMOVE_MEMBER", payload: { userId } });
+  };
   return (
     <AuthContext.Provider
       value={{
         ...state,
         login,
         logout,
-        updateCurrentClan,
+        setCurrentClan,
         createClan,
         deleteClan,
         getClans,
-        clanExpenses,
-        membersList,
+        getExpenses,
+        addExpense,
+        deleteExpense,
+        getMembers,
+        addMember,
+        removeMember,
       }}
     >
       {children}

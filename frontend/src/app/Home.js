@@ -17,9 +17,10 @@ const Home = () => {
     currentClan,
     expenses,
     clans,
-    updateCurrentClan,
-    membersList,
-    clanExpenses,
+    setCurrentClan,
+    getMembers,
+    getExpenses,
+    addExpense,
   } = useAuth();
 
   const [expenseForm, setExpenseForm] = useState({
@@ -30,7 +31,7 @@ const Home = () => {
 
   useEffect(() => {
     console.log("home rerendered");
-  }, [clans]);
+  }, [clans, expenses]);
 
   const handleExpenseChange = (fieldName, value) => {
     setExpenseForm({
@@ -39,7 +40,7 @@ const Home = () => {
     });
   };
 
-  const handleExpenseSubmit = async (e) => {
+  const handleAddExpense = async (e) => {
     e.preventDefault();
 
     const url = `${process.env.NEXT_PUBLIC_API}api/expense/add`;
@@ -56,27 +57,30 @@ const Home = () => {
     });
 
     const reply = await response.json();
+    console.log(reply);
     if (!response.ok) {
       window.alert("Failed to add expense");
-      console.log(reply);
+      setExpenseForm({ expense: "", amount: "", expenseDate: "" });
     } else {
+      addExpense(reply.data.expense);
       setExpenseForm({ expense: "", amount: "", expenseDate: "" });
     }
   };
 
   const handleSelectCurrentClan = async (clanName) => {
     // Update context
-    updateCurrentClan(clanName);
+    setCurrentClan(clanName);
 
     // Current members list
     const url = `${process.env.NEXT_PUBLIC_API}api/clan/getFromClanName?clanName=${clanName}`;
     const response = await fetch(url);
 
+    const reply = await response.json();
+    console.log(reply);
     if (!response.ok) {
       window.alert("Failed to get clan members.");
     } else {
-      const reply = await response.json();
-      membersList(reply.data);
+      getMembers(reply.data);
     }
 
     // Current expenses list
@@ -90,12 +94,12 @@ const Home = () => {
       },
     });
 
+    const _reply = await _response.json();
+    console.log(_reply);
     if (!_response.ok) {
       window.alert("Failed to get clan expenses.");
     } else {
-      const _reply = await _response.json();
-      clanExpenses(_reply.data);
-      console.log(_reply.data);
+      getExpenses(_reply.data);
     }
   };
 
@@ -136,7 +140,7 @@ const Home = () => {
               <></>
             ) : (
               <>
-                <Form title="Add Expense" onSubmit={handleExpenseSubmit}>
+                <Form title="Add Expense" onSubmit={handleAddExpense}>
                   <InputField
                     type="text"
                     label="Expense"

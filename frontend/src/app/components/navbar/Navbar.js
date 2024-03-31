@@ -6,8 +6,16 @@ import Form from "../form/Form";
 import InputField from "../form/InputField";
 
 function Navbar() {
-  const { username, logout, currentClan, members, deleteClan, createClan } =
-    useAuth();
+  const {
+    username,
+    logout,
+    currentClan,
+    members,
+    addMember,
+    removeMember,
+    deleteClan,
+    createClan,
+  } = useAuth();
   const [canDelete, setCanDelete] = useState(false);
   const [newMember, setNewMember] = useState("");
   const [clanForm, setClanForm] = useState("");
@@ -18,7 +26,6 @@ function Navbar() {
   };
 
   const closeModal = (e) => {
-    console.log(e);
     dialogRef.current.close();
   };
 
@@ -46,7 +53,6 @@ function Navbar() {
     } else {
       deleteClan(currentClan);
       handleCanDelete();
-      console.log("DELETEEEDD");
     }
   };
 
@@ -66,10 +72,11 @@ function Navbar() {
     });
 
     const reply = await response.json();
+    console.log(reply);
     if (!response.ok) {
       window.alert(reply.message);
     } else {
-      console.log(reply);
+      removeMember(memberId);
     }
   };
 
@@ -77,7 +84,7 @@ function Navbar() {
     setNewMember(e.target.value);
   };
 
-  const handleSubmitNewMember = async (e) => {
+  const handleAddMember = async (e) => {
     e.preventDefault();
 
     const url = `${process.env.NEXT_PUBLIC_API}api/clan/addUserToClan`;
@@ -94,10 +101,12 @@ function Navbar() {
     });
 
     const reply = await response.json();
+    console.log(reply);
     if (!response.ok) {
       window.alert(reply.message);
       setNewMember("");
     } else {
+      addMember(reply.data);
       setNewMember("");
     }
   };
@@ -130,7 +139,7 @@ function Navbar() {
       window.alert("Failed to add clan. Please try again.");
       setClanForm("");
     } else {
-      createClan(reply.data.clan);
+      createClan(reply.data);
       setClanForm("");
     }
   };
@@ -151,7 +160,7 @@ function Navbar() {
             <></>
           ) : (
             <>
-              <Form title="Add Member" onSubmit={handleSubmitNewMember}>
+              <Form title="Add Member" onSubmit={handleAddMember}>
                 <InputField
                   type="text"
                   label="Username"

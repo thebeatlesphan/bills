@@ -1,7 +1,7 @@
 import styles from "./ClanList.module.css";
 
 const ClanList = ({ isActive, ...props }) => {
-  let total = "0.00";
+  let total = 0.00;
   if (props.monthlyTotal != null) {
     total = props.monthlyTotal;
   }
@@ -20,7 +20,7 @@ const ClanList = ({ isActive, ...props }) => {
         <span>{props.clan.clanName}</span>
       </div>
       <div className={styles.total}>
-        ${total}
+        ${total.toFixed(2)}
         <span className={styles.text}>Monthly Total</span>
       </div>
     </div>

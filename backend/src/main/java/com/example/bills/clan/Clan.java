@@ -28,7 +28,7 @@ public class Clan {
   @OneToMany(mappedBy = "clan", cascade = CascadeType.ALL)
   private List<UserClan> userClans;
 
-  @OneToMany(mappedBy = "clan", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "clan", cascade = CascadeType.REMOVE)
   private List<Expense> expenses;
   
   public Integer getId() {
