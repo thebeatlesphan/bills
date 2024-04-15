@@ -1,14 +1,11 @@
 package com.example.bills.expense;
 
-import com.example.bills.association.UserClan;
-import com.example.bills.association.UserClanRepository;
 import com.example.bills.clan.Clan;
+import com.example.bills.clan.ClanService;
 import com.example.bills.exception.ClanNotFoundException;
-import com.example.bills.jwt.JwtTokenProvider;
+import com.example.bills.jwt.JwtService;
 import com.example.bills.response.ApiResponse;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -30,18 +27,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/expense")
 public class ExpenseController {
-  private final UserClanRepository userClanRepository;
-  private final JwtTokenProvider jwtTokenProvider;
-  private final ExpenseRepository expenseRepository;
+  private final ClanService clanService;
+  private final ExpenseService expenseService;
+  private final JwtService jwtService;
 
   @Autowired
   ExpenseController(
+      ClanService clanService,
+      ExpenseService expenseService,
       ExpenseRepository expenseRepository,
-      UserClanRepository userClanRepository,
-      JwtTokenProvider jwtTokenProvider) {
-    this.expenseRepository = expenseRepository;
-    this.userClanRepository = userClanRepository;
-    this.jwtTokenProvider = jwtTokenProvider;
+      JwtService jwtService) {
+    this.clanService = clanService;
+    this.expenseService = expenseService;
+    this.jwtService = jwtService;
   }
 
   @PostMapping("/add")
@@ -50,22 +48,9 @@ public class ExpenseController {
       @RequestBody Map<String, String> request) {
     try {
       // Verify the JWT token and extract the userId
-      String jwtToken = bearerToken.substring(7);
-      String userId = jwtTokenProvider
-          .getUsernameFromToken(jwtToken)
-          .getPayload()
-          .getSubject();
+      String userId = jwtService.getJwtUserId(bearerToken);
 
-      // Retrieve list of user's clans
-      List<UserClan> userClans = userClanRepository.findByUserId(Integer.parseInt(userId));
-      Clan clan = null;
-
-      // Loop through list to find clan matching clanName
-      for (UserClan uc : userClans) {
-        if (uc.getClan().getClanName().equals(request.get("clanName"))) {
-          clan = uc.getClan();
-        }
-      }
+      Clan clan = clanService.getClanByName(Integer.parseInt(userId), request.get("clanName"));
 
       // Handle if clan is not found
       if (clan == null) {
@@ -73,10 +58,8 @@ public class ExpenseController {
       }
 
       // Expense add logic
-      Expense newExpense = new Expense(request.get("expense"), new BigDecimal(request.get("amount")),
-          LocalDate.parse(request.get("expenseDate")));
-      newExpense.setClan(clan);
-      expenseRepository.save(newExpense);
+      Expense newExpense = expenseService.addExpense(request.get("expense"), request.get("amount"),
+          request.get("expenseDate"), clan);
 
       Map<String, Object> data = new HashMap<>();
       data.put("expense", newExpense);
@@ -94,22 +77,10 @@ public class ExpenseController {
   ResponseEntity<ApiResponse<?>> getClanExpenses(@RequestHeader("Authorization") String bearerToken,
       @RequestParam String clanName) {
     try {
-
       // Verify JWT token
-      String jwtToken = bearerToken.substring(7);
-      String userId = jwtTokenProvider
-          .getUsernameFromToken(jwtToken)
-          .getPayload()
-          .getSubject();
+      String userId = jwtService.getJwtUserId(bearerToken);
 
-      // Find clan from userId and clanName
-      List<UserClan> userClan = userClanRepository.findByUserId(Integer.parseInt(userId));
-      Clan clan = null;
-      for (UserClan uc : userClan) {
-        if (uc.getClan().getClanName().equals(clanName)) {
-          clan = uc.getClan();
-        }
-      }
+      Clan clan = clanService.getClanByName(Integer.parseInt(userId), clanName);
 
       // Handle if clan is not found
       if (clan == null) {
@@ -117,7 +88,7 @@ public class ExpenseController {
       }
 
       // Clan expenses logic
-      List<Expense> clanExpenses = expenseRepository.findByClan(clan);
+      List<Expense> clanExpenses = expenseService.getExpenseByClan(clan);
 
       // Sort the list by expenseDate desc
       Collections.sort(clanExpenses, Comparator.comparing(Expense::getExpenseDate).reversed());
@@ -132,11 +103,10 @@ public class ExpenseController {
       @RequestBody Map<String, String> request) {
     try {
       // Verify JWT
-      String jwtToken = bearerToken.substring(7);
-      String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
+      jwtService.getJwtUserId(bearerToken);
 
       String expenseId = request.get("expenseId");
-      expenseRepository.deleteById(Integer.parseInt(expenseId));
+      expenseService.deleteByExpenseId(Integer.parseInt(expenseId));
       return ResponseEntity.ok().body(new ApiResponse<>("Expense has been deleted!", null, new Date()));
     } catch (Exception ex) {
       return ResponseEntity.ok().body(new ApiResponse<>(ex.getMessage(), null, new Date()));

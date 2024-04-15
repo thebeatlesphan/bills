@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Version;
 
 @Entity
 public class UserClan {
@@ -23,6 +24,10 @@ public class UserClan {
   @ManyToOne()
   @JoinColumn(name = "clan_id")
   private Clan clan;
+
+  @Version
+  // Optimistic Locking to prevent concurrent updates
+  private Long version;
 
   public UserClan() {
   }
