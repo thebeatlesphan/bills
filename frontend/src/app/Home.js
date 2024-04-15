@@ -29,9 +29,7 @@ const Home = () => {
     expenseDate: "",
   });
 
-  useEffect(() => {
-    console.log("home rerendered");
-  }, [clans, expenses]);
+  useEffect(() => {}, [clans, expenses]);
 
   const handleExpenseChange = (fieldName, value) => {
     setExpenseForm({
@@ -67,12 +65,14 @@ const Home = () => {
     }
   };
 
-  const handleSelectCurrentClan = async (clanName) => {
+  const handleSelectCurrentClan = async (clan) => {
     // Update context
+    const clanName = clan.clan.clanName;
+    const clanId = clan.clan.id;
     setCurrentClan(clanName);
 
     // Current members list
-    const url = `${process.env.NEXT_PUBLIC_API}api/clan/getFromClanName?clanName=${clanName}`;
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/getUsersFromClanId?clanId=${clanId}`;
     const response = await fetch(url);
 
     const reply = await response.json();
@@ -127,7 +127,7 @@ const Home = () => {
                   key={clan.clan.id}
                   {...clan}
                   isActive={clan.clan.clanName === currentClan}
-                  onClick={() => handleSelectCurrentClan(clan.clan.clanName)}
+                  onClick={() => handleSelectCurrentClan(clan)}
                 />
               ))
             )}

@@ -6,6 +6,8 @@ import com.example.bills.response.LoginResponse;
 import com.example.bills.user.User;
 import com.example.bills.user.UserRepository;
 import java.util.Date;
+
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,6 +41,10 @@ public class LoginController {
       // Create an empty SecurityContext
       SecurityContext context = SecurityContextHolder.createEmptyContext();
 
+      if (LoginRequest.username() == null || LoginRequest.password() == null) {
+        throw new BadRequestException("Username or password cannot be null");
+      } 
+
       // Create an Authentication object
       Authentication authenticationRequest = new UsernamePasswordAuthenticationToken(
           LoginRequest.username(),
@@ -55,18 +61,20 @@ public class LoginController {
 
       // Get User details
       User user = userRepository.findByUsername(LoginRequest.username());
-      Integer userId = user.getId();
-      String username = user.getUsername();
 
       // Create a LoginResponse object with username and token
       LoginResponse loginResponse = new LoginResponse(
           "Login successful",
-          userId,
-          username,
+          user.getId(),
+          user.getUsername(),
           token,
           new Date());
 
       return ResponseEntity.ok(loginResponse);
+    } catch (BadRequestException ex) {
+      return ResponseEntity
+          .status(400)
+          .body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     } catch (Exception ex) {
       return ResponseEntity
           .status(500)

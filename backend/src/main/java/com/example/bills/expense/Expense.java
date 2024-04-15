@@ -1,12 +1,12 @@
 package com.example.bills.expense;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Version;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,6 +23,10 @@ public class Expense {
   private BigDecimal amount;
   private LocalDate expenseDate;
 
+  @Version
+  // Optimistic Locking to prevent concurrent updates
+  private Long version; 
+  
   @ManyToOne()
   @JoinColumn(name = "clan_id")
   private Clan clan;

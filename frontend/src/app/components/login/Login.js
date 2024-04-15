@@ -54,7 +54,7 @@ const Login = () => {
   };
 
   const handleClanMonthlyList = async (userId) => {
-    const url = `${process.env.NEXT_PUBLIC_API}api/clan/getFromUserId?userId=${userId}`;
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/getClanTotalsFromUserId?userId=${userId}`;
     const response = await fetch(url);
 
     const reply = await response.json();

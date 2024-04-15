@@ -6,19 +6,18 @@ import com.example.bills.exception.ClanNotFoundException;
 import com.example.bills.exception.UserIsNotClanOwnerException;
 import com.example.bills.exception.UsernameAlreadyExistsException;
 import com.example.bills.expense.ExpenseRepository;
-import com.example.bills.jwt.JwtTokenProvider;
+import com.example.bills.jwt.JwtService;
 import com.example.bills.response.ApiResponse;
 import com.example.bills.user.User;
 import com.example.bills.user.UserDTO;
-import com.example.bills.user.UserRepository;
+import com.example.bills.user.UserService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,94 +33,74 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/clan")
 public class ClanController {
-  private final UserRepository userRepository;
+  private final ClanService clanService;
   private final ClanRepository clanRepository;
+  private final UserService userService;
   private final UserClanRepository userClanRepository;
-  private final ExpenseRepository expenseRepository;
-  private final JwtTokenProvider jwtTokenProvider;
+  private final JwtService jwtService;
 
   @Autowired
   ClanController(
-      UserRepository userRepository,
+      ClanService clanService,
       ClanRepository clanRepository,
+      UserService userService,
       UserClanRepository userClanRepository,
       ExpenseRepository expenseRepository,
-      JwtTokenProvider jwtTokenProvider) {
-    this.userRepository = userRepository;
+      JwtService jwtService) {
+    this.clanService = clanService;
     this.clanRepository = clanRepository;
+    this.userService = userService;
     this.userClanRepository = userClanRepository;
-    this.expenseRepository = expenseRepository;
-    this.jwtTokenProvider = jwtTokenProvider;
+    this.jwtService = jwtService;
   }
 
   @PostMapping("/createClan")
-  ResponseEntity<ApiResponse<?>> registerGroup(
+  ResponseEntity<ApiResponse<?>> createClan(
       @RequestHeader("Authorization") String bearerToken,
       @RequestBody Clan clan) {
-    // Verify the JWT token and extract the userId
-    String jwtToken = bearerToken.substring(7);
-    String userId = jwtTokenProvider
-        .getUsernameFromToken(jwtToken)
-        .getPayload()
-        .getSubject();
+    try {
+      // Verify the JWT token and extract the userId
+      String userId = jwtService.getJwtUserId(bearerToken);
 
-    // Clan add logic
-    Clan newClan = clan;
-    newClan.setOwnerId(Integer.parseInt(userId));
-    clanRepository.save(newClan);
+      // Check for duplicate clan names
+      if (clanService.getClanByName(Integer.parseInt(userId), clan.getClanName()) != null)
+        throw new BadRequestException("Clan name already exists");
 
-    // UserClan association logic
-    User newUser = userRepository.findById(Integer.parseInt(userId)).orElseThrow();
-    UserClan newUserClan = new UserClan(newUser, newClan);
-    userClanRepository.save(newUserClan);
+      // Clan add logic
+      Clan newClan = clanService.addClan(Integer.parseInt(userId), clan);
 
-    Map<String, Object> data = new HashMap<>();
-    data.put("clan", newUserClan.getClan());
-    data.put("monthlyTotal", 0.00);
+      Map<String, Object> data = new HashMap<>();
+      data.put("clan", newClan);
+      data.put("monthlyTotal", 0.00);
 
-    return ResponseEntity
-        .ok()
-        .body(new ApiResponse<>("Clan successfully created", data, new Date()));
+      return ResponseEntity
+          .ok()
+          .body(new ApiResponse<>("Clan successfully created", data, new Date()));
+    } catch (BadRequestException ex) {
+      return ResponseEntity
+          .status(400)
+          .body(new ApiResponse<>(ex.getMessage(), null, new Date()));
+    }
   }
 
+  // Request with GET method cannot have body
   @CrossOrigin
-  @GetMapping("/getFromClanName")
+  @GetMapping("/getUsersFromClanId")
   // Return users from clan from given clanName
-  ResponseEntity<ApiResponse<?>> getFromClanName(@RequestParam String clanName) {
-    Clan name = clanRepository.findByClanName(clanName);
-    Integer clanId = name.getId();
-    List<UserClan> userClan = userClanRepository.findByClanId(clanId);
-    List<UserDTO> users = new ArrayList<UserDTO>();
-    for (UserClan u : userClan) {
-      User user = u.getUser();
-      UserDTO userDTO = new UserDTO(user.getId(), user.getUsername());
-      users.add(userDTO);
-    }
-
+  ResponseEntity<ApiResponse<?>> getUsersFromClanId(@RequestParam String clanId) {
+    List<UserDTO> users = clanService.getUsersFromClanId(Integer.parseInt(clanId));
     return ResponseEntity.ok().body(new ApiResponse<>("Users from clan retrieved", users, new Date()));
   }
 
   @CrossOrigin
-  @GetMapping("/getFromUserId")
+  @GetMapping("/getClanTotalsFromUserId")
   // Return list of clans that the user has joined and their monthly budget
-  ResponseEntity<ApiResponse<?>> getFromUserId(@RequestParam String userId) {
+  ResponseEntity<ApiResponse<?>> getClanTotalsFromUserId(@RequestParam String userId) {
     // Retrieve user's clan list
-    List<UserClan> userClans = userClanRepository.findByUserId(Integer.parseInt(userId));
-
-    LocalDate currentDate = LocalDate.now();
-    int month = currentDate.getMonthValue();
-    int year = currentDate.getYear();
+    List<UserClan> userClans = clanService.getAllClansFromUserId(Integer.parseInt(userId));
 
     // Query the clan's monthly total
-    List<Map<String, Object>> clanMonthlyTotals = new ArrayList<>();
-    for (UserClan userClan : userClans) {
-      Clan clan = userClan.getClan();
-      Float monthlyTotal = expenseRepository.getTotalExpenseForMonthAndClan(month, year, clan);
-      Map<String, Object> clanData = new HashMap<>();
-      clanData.put("clan", clan);
-      clanData.put("monthlyTotal", monthlyTotal);
-      clanMonthlyTotals.add(clanData);
-    }
+    List<Map<String, Object>> clanMonthlyTotals = clanService.getClanTotalsFromUserClan(userClans);
 
     return ResponseEntity.ok().body(new ApiResponse<>("Clans from user retrieved", clanMonthlyTotals, new Date()));
   };
@@ -131,32 +110,20 @@ public class ClanController {
       @RequestBody Map<String, String> request) {
     try {
       // Verify the JWT token and extract the userId
-      String jwtToken = bearerToken.substring(7);
-      String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
+      String userId = jwtService.getJwtUserId(bearerToken);
 
-      // Add user logic
-      User newUser = userRepository.findByUsername(request.get("username"));
-      List<Clan> clanList = clanRepository.findByOwnerId(Integer.parseInt(userId));
-      Clan clan = null;
-      for (Clan c : clanList) {
-        if (c.getClanName().equals(request.get("clanName"))) {
-          clan = c;
-        }
-      }
+      // Verify intended new user and clan
+      User _user = userService.getUserByName(request.get("username"));
+      Clan clan = clanService.getClanByName(Integer.parseInt(userId), request.get("clanName"));
 
-      // Return exception: User already belongs to the clan
-      Integer newUserId = newUser.getId();
-      Integer clanId = clan.getId();
-      if (userClanRepository.findByUserIdAndClanId(newUserId, clanId) != null) {
-        throw new UsernameAlreadyExistsException("Member already in group");
-      }
+      // Check if intended user already belongs to clan
+      clanService.userClanExists(_user, clan);
 
-      UserClan newUserClan = new UserClan(newUser, clan);
-      userClanRepository.save(newUserClan);
+      // Update association table
+      clanService.addUserClan(_user, clan);
 
-      UserDTO data = new UserDTO(newUserId, newUser.getUsername());
+      UserDTO data = new UserDTO(_user.getId(), _user.getUsername());
 
-      // Clan clan = clanRepository.find
       return ResponseEntity.ok().body(new ApiResponse<>("User added to clan", data, new Date()));
     } catch (UsernameAlreadyExistsException ex) {
       // Return an error response for the exception
@@ -172,10 +139,7 @@ public class ClanController {
       @RequestParam String clanName) {
     try {
       // Verify JWT token
-      String jwtToken = bearerToken.substring(7);
-      String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
-
-      System.out.println("\n\nUSERID: " + userId);
+      String userId = jwtService.getJwtUserId(bearerToken);
 
       // Retrieve list of user's clans
       List<UserClan> userClanList = userClanRepository.findByUserId(Integer.parseInt(userId));
@@ -209,8 +173,7 @@ public class ClanController {
       @RequestBody Map<String, String> request) {
     try {
       // Verify JWT token
-      String jwtToken = bearerToken.substring(7);
-      String userId = jwtTokenProvider.getUsernameFromToken(jwtToken).getPayload().getSubject();
+      String userId = jwtService.getJwtUserId(bearerToken);
 
       // Verify clan
       List<UserClan> userClan = userClanRepository.findByUserId(Integer.parseInt(userId));
@@ -250,12 +213,4 @@ public class ClanController {
       return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
     }
   };
-
-  @PostMapping("/test")
-  ResponseEntity<?> test(
-      @RequestHeader("Authorization") String bearerToken,
-      @RequestBody String test) {
-    System.out.println("\n\n" + bearerToken + "\n\n" + test);
-    return ResponseEntity.ok().body(new ApiResponse<>(test, bearerToken, new Date()));
-  }
 }
