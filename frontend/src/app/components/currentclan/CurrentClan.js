@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useAuth } from "../context/Context";
 import styles from "./CurrentClan.module.css";
 
@@ -7,7 +6,7 @@ const CurrentClan = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.current}>{currentClan}</div>
+      <div className={styles.current}>{currentClan.clanName}</div>
       <div className={styles.clanMembersTitle}>Clan Members</div>
       <div className={styles.clanMembers}>
         {members == null ? (

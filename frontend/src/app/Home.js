@@ -43,7 +43,11 @@ const Home = () => {
 
     const url = `${process.env.NEXT_PUBLIC_API}api/expense/add`;
     const token = sessionStorage.getItem("jwtToken");
-    const data = { ...expenseForm, clanName: currentClan };
+    const data = {
+      ...expenseForm,
+      clanName: currentClan.clanName,
+      clanId: currentClan.clanId,
+    };
 
     const response = await fetch(url, {
       method: "POST",
@@ -69,7 +73,12 @@ const Home = () => {
     // Update context
     const clanName = clan.clan.clanName;
     const clanId = clan.clan.id;
-    setCurrentClan(clanName);
+    const data = {
+      clanName: clanName,
+      clanId: clanId,
+    };
+
+    setCurrentClan(data);
 
     // Current members list
     const url = `${process.env.NEXT_PUBLIC_API}api/clan/getUsersFromClanId?clanId=${clanId}`;

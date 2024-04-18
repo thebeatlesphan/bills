@@ -15,7 +15,6 @@ import com.example.bills.expense.ExpenseRepository;
 import com.example.bills.user.User;
 import com.example.bills.user.UserDTO;
 import com.example.bills.user.UserRepository;
-import com.example.bills.user.UserService;
 
 import jakarta.transaction.Transactional;
 
@@ -23,7 +22,6 @@ import jakarta.transaction.Transactional;
 public class ClanService {
     private final ClanRepository clanRepository;
     private final ExpenseRepository expenseRepository;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final UserClanRepository userClanRepository;
 
@@ -31,12 +29,10 @@ public class ClanService {
     public ClanService(
             ClanRepository clanRepository,
             ExpenseRepository expenseRepository,
-            UserService userService,
             UserRepository userRepository,
             UserClanRepository userClanRepository) {
         this.clanRepository = clanRepository;
         this.expenseRepository = expenseRepository;
-        this.userService = userService;
         this.userRepository = userRepository;
         this.userClanRepository = userClanRepository;
     }
@@ -118,5 +114,18 @@ public class ClanService {
         Integer userId = user.getId();
         Integer clanId = clan.getId();
         return userClanRepository.findByUserIdAndClanId(userId, clanId) != null;
+    }
+
+    public boolean isClanOwner(User user, Clan clan) {
+        return (user.getId() == clan.getOwnerId());
+    }
+
+    public void deleteClan(Clan clan) {
+        clanRepository.delete(clan);
+    }
+
+    public void removeMember(User user, Clan clan) {
+        UserClan temp = new UserClan(user, clan);
+        userClanRepository.delete(temp);
     }
 }

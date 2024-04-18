@@ -59,6 +59,9 @@ const authReducer = (state, action) => {
         clans: state.clans.filter(
           (clan) => clan.clan.clanName != action.payload.clanName
         ),
+        currentClan: null,
+        members: null,
+        expenses: null,
       };
     case "GET_EXPENSES":
       return {
