@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/clan")
 public class ClanController {
   private final ClanService clanService;
-  private final ClanRepository clanRepository;
   private final UserService userService;
   private final UserClanRepository userClanRepository;
   private final JwtService jwtService;
@@ -42,13 +41,11 @@ public class ClanController {
   @Autowired
   ClanController(
       ClanService clanService,
-      ClanRepository clanRepository,
       UserService userService,
       UserClanRepository userClanRepository,
       ExpenseRepository expenseRepository,
       JwtService jwtService) {
     this.clanService = clanService;
-    this.clanRepository = clanRepository;
     this.userService = userService;
     this.userClanRepository = userClanRepository;
     this.jwtService = jwtService;
@@ -136,30 +133,20 @@ public class ClanController {
 
   @DeleteMapping("/delete")
   ResponseEntity<ApiResponse<?>> deleteClan(@RequestHeader("Authorization") String bearerToken,
-      @RequestParam String clanName) {
+      @RequestParam String clanId) {
     try {
       // Verify JWT token
       String userId = jwtService.getJwtUserId(bearerToken);
-
-      // Retrieve list of user's clans
-      List<UserClan> userClanList = userClanRepository.findByUserId(Integer.parseInt(userId));
-      Clan deleteClan = null;
+      User user = userService.getUserById(Integer.parseInt(userId));
+      Clan clan = clanService.getClanById(Integer.parseInt(clanId));
 
       // Find by clanName and verify owner
-      for (UserClan uc : userClanList) {
-        Clan c = uc.getClan();
-        if (c.getOwnerId() == Integer.parseInt(userId) && c.getClanName().equals(clanName)) {
-          deleteClan = c;
-          break; // Requestee is the owner of the clan
-        }
+      if (!clanService.isClanOwner(user, clan)) {
+        throw new UserIsNotClanOwnerException("You are not the clan owner!");
       }
 
-      // If requestee was not the clan owner
-      if (deleteClan == null) {
-        throw new UserIsNotClanOwnerException();
-      }
+      clanService.deleteClan(clan);
 
-      clanRepository.delete(deleteClan);
       return ResponseEntity.ok().body(new ApiResponse<>("Clan deleted", null, new Date()));
     } catch (UserIsNotClanOwnerException ex) {
       return ResponseEntity.badRequest().body(new ApiResponse<>(ex.getMessage(), null, new Date()));
@@ -175,14 +162,9 @@ public class ClanController {
       // Verify JWT token
       String userId = jwtService.getJwtUserId(bearerToken);
 
-      // Verify clan
-      List<UserClan> userClan = userClanRepository.findByUserId(Integer.parseInt(userId));
-      Clan clan = null;
-      for (UserClan uc : userClan) {
-        if (uc.getClan().getClanName().equals(request.get("clanName"))) {
-          clan = uc.getClan();
-        }
-      }
+      // Verify clan and user
+      Clan clan = clanService.getClanById(Integer.parseInt(request.get("clanId")));
+      User user = userService.getUserById(Integer.parseInt(request.get("memberId")));
 
       // Exception if Clan is not found
       if (clan == null) {
@@ -195,13 +177,10 @@ public class ClanController {
       }
 
       // Remove member logic
-      UserClan remove = userClanRepository.findByUserIdAndClanId(Integer.parseInt(request.get("memberId")),
-          clan.getId());
-
-      if (remove == null) {
+      if (user == null) {
         throw new IllegalArgumentException("Selected member could not be found");
       } else {
-        userClanRepository.delete(remove);
+        clanService.removeMember(user, clan);
       }
 
       return ResponseEntity.ok().body(new ApiResponse<>("Members removed", null, new Date()));

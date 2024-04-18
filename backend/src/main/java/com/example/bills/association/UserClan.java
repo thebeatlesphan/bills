@@ -25,9 +25,7 @@ public class UserClan {
   @JoinColumn(name = "clan_id")
   private Clan clan;
 
-  @Version
-  // Optimistic Locking to prevent concurrent updates
-  private Long version;
+  // TODO: @VERSION for optimistic looking
 
   public UserClan() {
   }

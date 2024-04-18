@@ -30,6 +30,10 @@ public class UserService {
         userRepository.save(newUser);
     }
 
+    public User getUserById(Integer id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
     public User getUserByName(String userName) {
         return userRepository.findByUsername(userName);
     }

@@ -36,7 +36,7 @@ function Navbar() {
   const handleDeleteClan = async (e) => {
     e.preventDefault();
 
-    const url = `${process.env.NEXT_PUBLIC_API}api/clan/delete?clanName=${currentClan}`;
+    const url = `${process.env.NEXT_PUBLIC_API}api/clan/delete?clanId=${currentClan.clanId}`;
     const jwtToken = sessionStorage.getItem("jwtToken");
     const response = await fetch(url, {
       method: "DELETE",
@@ -47,11 +47,12 @@ function Navbar() {
     });
 
     const reply = await response.json();
+    console.log(reply);
     if (!response.ok) {
       window.alert(reply.message);
       handleCanDelete();
     } else {
-      deleteClan(currentClan);
+      deleteClan(currentClan.clanName);
       handleCanDelete();
     }
   };
@@ -59,9 +60,12 @@ function Navbar() {
   const handleRemoveMember = async (memberId) => {
     const url = `${process.env.NEXT_PUBLIC_API}api/clan/removeMember`;
     const jwtToken = sessionStorage.getItem("jwtToken");
-    const data = { clanName: currentClan, memberId: memberId };
+    const data = {
+      clanName: currentClan.clanName,
+      memberId: memberId,
+      clanId: currentClan.clanId,
+    };
 
-    console.log(data);
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
@@ -89,7 +93,11 @@ function Navbar() {
 
     const url = `${process.env.NEXT_PUBLIC_API}api/clan/addUserToClan`;
     const token = sessionStorage.getItem("jwtToken");
-    const data = { username: newMember, clanName: currentClan };
+    const data = {
+      username: newMember,
+      clanName: currentClan.clanName,
+      clanId: currentClan.clanId,
+    };
 
     const response = await fetch(url, {
       method: "POST",
